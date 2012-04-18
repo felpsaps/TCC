@@ -1,0 +1,42 @@
+public static void main(String[] args) throws AWTException {
+
+        System.out.println("Barcode Linha de Código ");
+
+        // criando um objeto da classe Document
+        Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+
+        try {
+
+            //Aqui começamos a utilizar as classes do iText: o documento
+            //criado acima será
+            //direcionado para um arquivo PDF.
+            PdfWriter writer = PdfWriter.getInstance(document, 
+                               new FileOutputStream("C:\\Users\\Felps\\Desktop\\CodigoBarras.pdf"));
+
+            //abrindo o documento.
+            document.open();
+
+
+            //adicionando um novo paragrafo.
+            document.add(new Paragraph("CÓDIGOS DE BARRA"));
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph(" "));
+
+            //Comecando a configurar o cod de barras
+            PdfContentByte cb = writer.getDirectContent();
+            BarcodeEAN codeEAN = new BarcodeEAN();
+
+            //O iText suporta os principais tipos de código de barra, como Barcode39,
+            //  Barcode128 (128, 128_UCC, 128_RAW),  BarcodeEAN (EAN13, EAN8, UPCA, UPCE), EANSUP, etc
+            codeEAN.setCodeType(BarcodeEAN.EAN13);
+            codeEAN.setCode("9780201615883");
+
+            Image imageEAN = codeEAN.createImageWithBarcode(cb, null, BaseColor.RED);
+
+            document.add(new Phrase(new Chunk(imageEAN, 0, 0)));
+
+        } catch (Exception de) {
+            de.printStackTrace();
+        }
+        document.close();
+    }
