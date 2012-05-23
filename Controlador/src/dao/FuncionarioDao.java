@@ -74,4 +74,20 @@ public class FuncionarioDao extends Dao {
         fechaConexao();
     }
     
+    public void selectLoginESenha(String login) throws SQLException
+    {
+        String comandoSelect = String.format("select login, senha from funcionario where login='%s'",
+                                              login);
+
+        estabeleceConexao();
+        ResultSet rs = comando.executeQuery(comandoSelect);
+        if (rs.next()) {
+            System.out.println("login: " + rs.getString(1) + rs.getString(2));
+        } else {
+            System.out.println("OI");
+        }
+        fechaConexao();
+        System.out.println("OIIIIII");       
+    }
+    
 }
