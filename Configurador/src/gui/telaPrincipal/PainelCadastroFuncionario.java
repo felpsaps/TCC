@@ -16,6 +16,8 @@ public class PainelCadastroFuncionario extends JPanel{
     private JTextField txtCodigo;
     private JTextField txtNome;
     private JTextField txtEmail;
+    private JTextField txtLogin;
+    private JTextField txtSenha;
     
     public PainelCadastroFuncionario(Funcionario f) {
         func = f;
