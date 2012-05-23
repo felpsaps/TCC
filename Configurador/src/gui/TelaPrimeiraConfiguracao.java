@@ -8,9 +8,11 @@ import configurador.ServidorSMTP;
 import dao.FuncionarioDao;
 import dao.ServidorSMTPDao;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.*;
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -79,13 +81,14 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         txtNome.setText("Felipe");
         txtCelular.setValue("1998419344");
         txtEmail.setText("felipinlineaps@gmail.com");
-        txtEmailEnvioAutomatico.setText("felipeaps89@gmail.com");
         txtLogin.setText("felipeaps");
         txtSenhaEmailEnvioAutomatico.setText("89082323");
         txtSenhaEmailEnvioAutomatico2.setText("89082323");
         txtSenhaLogin.setText("230898");
         txtSenhaLogin2.setText("230898");
         comboServidoresEmailAutomatico.setSelectedItem("gmail");
+        txtEmailEnvioAutomatico.setEnabled(true);
+        txtEmailEnvioAutomatico.setText("felipeaps89@gmail.com");
     }
     
     private void montarComboServidoresSMTP() {
@@ -192,6 +195,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         
         builder.add(lblServidorEmail, cc.xy(1, 1));
         builder.add(getComboServidores(), cc.xy(3, 1));
+        builder.add(getLblAdicionarServidor(), cc.xy(5, 1));
         builder.setBackground(MedidasPadroes.COR_DE_FUNDO);
         
         return builder.getPanel();
@@ -236,6 +240,29 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         builder.setBackground(MedidasPadroes.COR_DE_FUNDO);
         
         return builder.getPanel();
+    }
+    
+    private JLabel getLblAdicionarServidor() {
+        ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("arquivos/adicionarIcone.gif"));
+        final JLabel lbl = new JLabel(img);
+        lbl.setToolTipText("Adicionar outros servidores SMTP para o envio de email automático");
+        lbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                lbl.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                lbl.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            
+            }
+        });
+        return lbl;
     }
     
     private JPasswordField getTxtSenhaLogin() {
@@ -565,5 +592,9 @@ public class TelaPrimeiraConfiguracao extends JFrame{
             return -1;
         }        
         return 0;
-    }    
+    }
+    
+    public void atualizarComboServidores() {
+        montarComboServidoresSMTP();
+    }
 }
