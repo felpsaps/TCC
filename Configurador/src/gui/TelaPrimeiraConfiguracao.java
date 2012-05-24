@@ -7,12 +7,11 @@ import configurador.Funcionario;
 import configurador.ServidorSMTP;
 import dao.FuncionarioDao;
 import dao.ServidorSMTPDao;
+import email.SendMail;
+import excessoes.ServidorSMTPDaoException;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,7 +19,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
 import utils.Criptografia;
 import utils.LeitorArquivoConfiguracoes;
@@ -59,11 +62,14 @@ public class TelaPrimeiraConfiguracao extends JFrame{
     private JLabel lblCodigo = new JLabel("Código:");
     
     // ComboBox para o servidor de email automático
-    JComboBox comboServidoresEmailAutomatico;
+    private JComboBox comboServidoresEmailAutomatico;
     
     // Botões
-    JButton btnOK;
-    JButton btnCancelar;
+    private JButton btnOK;
+    private JButton btnCancelar;
+    private JButton btnTestarServidorSMTP;
+    
+    private Properties servidoresSMTP;
     
     public TelaPrimeiraConfiguracao() {
         super("Configurações Iniciais");
@@ -73,11 +79,13 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         setResizable(false);
         setLocationRelativeTo(null);
         init();
+        
+        
+        servidoresSMTP = LeitorArquivoServidoresSMTP.getInstance();
         teste();
         setVisible(true);
     }
     private void teste() {
-        txtCodigo.setText("0");
         txtNome.setText("Felipe");
         txtCelular.setValue("1998419344");
         txtEmail.setText("felipinlineaps@gmail.com");
@@ -215,7 +223,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
     }
     
     private JPanel getPainelLinha7() {
-        FormLayout layout = new FormLayout("pref, 4dlu, pref, 10dlu, pref, 3dlu, pref, 3dlu", // Colunas
+        FormLayout layout = new FormLayout("pref, 4dlu, pref, 10dlu, pref, 3dlu, pref, 3dlu, pref", // Colunas
                                            "pref"); // Linhas
         PanelBuilder builder = new PanelBuilder(layout);
         CellConstraints cc = new CellConstraints();  
@@ -224,6 +232,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         builder.add(getTxtSenhaEmail(), cc.xy(3, 1));
         builder.add(lblConfirmarSenhaEmail, cc.xy(5, 1));
         builder.add(getTxtSenhaEmail2(), cc.xy(7, 1));
+        builder.add(getBtnTestarServidorSMTP(), cc.xy(9, 1));
         builder.setBackground(MedidasPadroes.COR_DE_FUNDO);
         
         return builder.getPanel();
@@ -279,6 +288,14 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         if (txtCodigo == null) {
             txtCodigo = new JTextField();
             txtCodigo.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_GRANDE);
+            txtCodigo.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == 10) {
+                        txtNome.requestFocus();
+                    }
+                }
+            });
             return txtCodigo;
         } else {
             return txtCodigo;
@@ -302,6 +319,44 @@ public class TelaPrimeiraConfiguracao extends JFrame{
             return txtLogin;
         } else {
             return txtLogin;
+        }
+    }
+    
+    private JButton getBtnTestarServidorSMTP() {
+        if (btnTestarServidorSMTP == null) {
+            btnTestarServidorSMTP = new JButton("Testar Envio Automático");
+            btnTestarServidorSMTP.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String nome =  comboServidoresEmailAutomatico.getSelectedItem().toString();
+                    String enderecoServidor = servidoresSMTP.getProperty(nome);
+
+                    String portaServidor = enderecoServidor.substring(enderecoServidor.indexOf("/")+1, 
+                            enderecoServidor.length());
+                    enderecoServidor = enderecoServidor.substring(0, enderecoServidor.indexOf("/"));
+
+                    ServidorSMTP servidorSMTP = new ServidorSMTP(nome, enderecoServidor,                        
+                            new String(txtSenhaEmailEnvioAutomatico.getPassword()), portaServidor,
+                            txtEmailEnvioAutomatico.getText());
+
+                    SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
+                            servidorSMTP.getEmail(), servidorSMTP.getSenha());
+                    mail.sendMail(txtEmail.getText(), "Teste Email Automático",
+                            "Teste de envio automático", TelaPrimeiraConfiguracao.this);
+                    if (mail.getSucesso()) {
+                        setCorLabels(Color.BLACK);
+                        JOptionPane.showMessageDialog(TelaPrimeiraConfiguracao.this, "Email Enviado com Sucesso!\n"
+                                + "Verifique sua caixa de email.\n"
+                                + "Email enviado para: " + txtEmail.getText(), "Sucesso!", 
+                                JOptionPane.INFORMATION_MESSAGE);
+                        btnTestarServidorSMTP.setEnabled(false);
+                    }
+                }                
+            });
+            return btnTestarServidorSMTP;
+        } else {
+            return btnTestarServidorSMTP;
         }
     }
     
@@ -340,6 +395,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    btnTestarServidorSMTP.setEnabled(true);
                     if (comboServidoresEmailAutomatico.getSelectedItem().equals("gmail")) {
                         txtEmailEnvioAutomatico.setEnabled(true);
                         txtEmailEnvioAutomatico.setText("@gmail.com");
@@ -403,6 +459,23 @@ public class TelaPrimeiraConfiguracao extends JFrame{
             txtEmailEnvioAutomatico.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_GRANDE);
             txtEmailEnvioAutomatico.setToolTipText("Deve ser um email do mesmo servidor de emails automático");
             txtEmailEnvioAutomatico.setEnabled(false);
+            txtEmailEnvioAutomatico.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    btnTestarServidorSMTP.setEnabled(true);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    insertUpdate(e);
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    insertUpdate(e);
+                }
+            });
             return txtEmailEnvioAutomatico;
         } else {
             return txtEmailEnvioAutomatico;
@@ -413,6 +486,23 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         if (txtSenhaEmailEnvioAutomatico == null) {
             txtSenhaEmailEnvioAutomatico = new JPasswordField();
             txtSenhaEmailEnvioAutomatico.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_MEDIO);
+            txtSenhaEmailEnvioAutomatico.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    btnTestarServidorSMTP.setEnabled(true);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    insertUpdate(e);
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    insertUpdate(e);
+                }
+            });
             return txtSenhaEmailEnvioAutomatico;
         } else {
             return txtSenhaEmailEnvioAutomatico;
@@ -423,6 +513,24 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         if (txtSenhaEmailEnvioAutomatico2 == null) {
             txtSenhaEmailEnvioAutomatico2 = new JPasswordField();
             txtSenhaEmailEnvioAutomatico2.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_MEDIO);
+            txtSenhaEmailEnvioAutomatico2.getDocument().addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    btnTestarServidorSMTP.setEnabled(true);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    insertUpdate(e);
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    insertUpdate(e);
+                }
+            });
+            
             return txtSenhaEmailEnvioAutomatico2;
         } else {
             return txtSenhaEmailEnvioAutomatico2;
@@ -463,7 +571,6 @@ public class TelaPrimeiraConfiguracao extends JFrame{
             FileOutputStream out;
             try {               
                 Properties configuracoesIniciais = LeitorArquivoConfiguracoes.getInstance();
-                Properties servidoresSMTP = LeitorArquivoServidoresSMTP.getInstance();
                 
                 File prop = new File("configuracoes.properties");
                 
@@ -508,7 +615,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         }        
     }
     
-    private int validarCampos() {
+    private int validarCampos() {        
         if (txtCodigo.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Código Inválido!", "Erro", JOptionPane.ERROR_MESSAGE);
             lblCodigo.setForeground(Color.RED);
@@ -589,6 +696,11 @@ public class TelaPrimeiraConfiguracao extends JFrame{
             lblSenhaEmail.setForeground(Color.RED);
             lblConfirmarSenhaEmail.setForeground(Color.RED);
             txtSenhaEmailEnvioAutomatico.requestFocus();
+            return -1;
+        } if (btnTestarServidorSMTP.isEnabled()) {
+            JOptionPane.showMessageDialog(this, "Por favor, teste o envio de email"
+                    + " automático antes de continuar!", "Erro", JOptionPane.ERROR_MESSAGE);
+            btnTestarServidorSMTP.requestFocus();
             return -1;
         }        
         return 0;
