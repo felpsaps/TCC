@@ -5,6 +5,7 @@ import gui.TelaLogin;
 import gui.TelaPrimeiraConfiguracao;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Scanner;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -24,7 +25,7 @@ public class Main {
         
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         Properties props = LeitorArquivoConfiguracoes.getInstance();
-        boolean primeiraVez = true;
+        boolean primeiraVez = true;;
         
         for (Object value : props.values()) {
             if(value.equals("")) {
