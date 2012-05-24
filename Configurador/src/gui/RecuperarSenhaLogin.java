@@ -183,7 +183,7 @@ public class RecuperarSenhaLogin extends JDialog{
                     public void run() {
                         SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
                                 servidorSMTP.getEmail(), servidorSMTP.getSenha());
-                        mail.sendMail(servidorSMTP.getEmail(), func.getEmail(), "Recuperação de Senha",
+                        mail.sendMail(func.getEmail(), "Recuperação de Senha",
                                 getMensagemEmail(novaSenha, func.getNome()), RecuperarSenhaLogin.this);
                     }
                 });
