@@ -48,6 +48,7 @@ public class RecuperarSenhaLogin extends JDialog{
         setLocationRelativeTo(null);
         setModal(true);
         init();
+        txtEmail.setText("felipinlineaps@gmail.com");
         setVisible(true);
     }
 
@@ -183,7 +184,7 @@ public class RecuperarSenhaLogin extends JDialog{
                         SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
                                 servidorSMTP.getEmail(), servidorSMTP.getSenha());
                         mail.sendMail(servidorSMTP.getEmail(), func.getEmail(), "Recuperação de Senha",
-                                getMensagemEmail(novaSenha, func.getNome()));
+                                getMensagemEmail(novaSenha, func.getNome()), RecuperarSenhaLogin.this);
                     }
                 });
                 JOptionPane.showMessageDialog(RecuperarSenhaLogin.this, "Sua nova senha foi enviada com sucesso!",
