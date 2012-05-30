@@ -1,9 +1,11 @@
 package principal;
 
 
+import GUI.TelaPrincipal;
 import dao.Banco;
 import dao.FuncionarioDao;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 /**
  *
@@ -11,8 +13,7 @@ import java.sql.SQLException;
  */
 public class Main {
      public static void main(String[] args) throws SQLException {
-        Banco.criaConexao("root", "230898");
-        new FuncionarioDao().selectLoginESenha("felipeaps");
+        new TelaPrincipal();
         
     }
 }

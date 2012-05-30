@@ -76,18 +76,18 @@ public class FuncionarioDao extends Dao {
     
     public void selectLoginESenha(String login) throws SQLException
     {
-        String comandoSelect = String.format("select login, senha from funcionario where login='%s'",
+        String comandoSelect = String.format("select* from funcionario where codigo='%s'",
                                               login);
 
         estabeleceConexao();
         ResultSet rs = comando.executeQuery(comandoSelect);
         if (rs.next()) {
-            System.out.println("login: " + rs.getString(1) + rs.getString(2));
+            System.out.println("login: " + rs.getString(1) + "  " + rs.getString(2));
+            System.out.println("Autenticação realizada");
         } else {
-            System.out.println("OI");
+            System.out.println("Funcionário não encontrado");
         }
-        fechaConexao();
-        System.out.println("OIIIIII");       
+        fechaConexao();      
     }
     
 }
