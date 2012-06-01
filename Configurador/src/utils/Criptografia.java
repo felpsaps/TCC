@@ -27,6 +27,9 @@ public class Criptografia {
     }
 
     public static String criptografar(String str) {
+        if (str == null) {
+            return null;
+        }
         try {            
             // Encode the string into bytes using utf-8
             byte[] utf8 = str.getBytes("UTF8");
