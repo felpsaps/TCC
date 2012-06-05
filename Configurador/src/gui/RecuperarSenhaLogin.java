@@ -10,6 +10,8 @@ import dao.ServidorSMTPDao;
 import email.SendMail;
 import excessoes.FuncionarioDaoException;
 import excessoes.ServidorSMTPDaoException;
+import gui.componentes.BotaoPadrao;
+import gui.componentes.TxtFieldGrande;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,10 +27,10 @@ import utils.MedidasPadroes;
 public class RecuperarSenhaLogin extends JDialog{
 
     private static final char[] ALL_CHARS = new char[62];
-    private JButton btnEnviar;
+    private BotaoPadrao btnEnviar;
     private JLabel lblEmail;
-    private JTextField txtEmail;
-    private JButton btnCancelar;
+    private TxtFieldGrande txtEmail;
+    private BotaoPadrao btnCancelar;
 
     static {
         for (int i = 48, j = 0; i < 123; i++) {
@@ -102,10 +104,9 @@ public class RecuperarSenhaLogin extends JDialog{
         return builder.getPanel();
     }
 
-    private JTextField getTxtEmail() {
+    private TxtFieldGrande getTxtEmail() {
         if (txtEmail == null) {
-            txtEmail = new JTextField();
-            txtEmail.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_GRANDE);
+            txtEmail = new TxtFieldGrande();
             return txtEmail;
         } else {
             return txtEmail;
@@ -123,9 +124,9 @@ public class RecuperarSenhaLogin extends JDialog{
         }
     }
 
-    private JButton getBtnEnviar() {
+    private BotaoPadrao getBtnEnviar() {
         if (btnEnviar == null) {
-            btnEnviar = new JButton("Enviar");
+            btnEnviar = new BotaoPadrao("Enviar");
             btnEnviar.addActionListener(new AcaoEnviar());
             return btnEnviar;
         } else {
@@ -133,9 +134,9 @@ public class RecuperarSenhaLogin extends JDialog{
         }
     }
 
-    private JButton getBtnCancelar() {
+    private BotaoPadrao getBtnCancelar() {
         if (btnCancelar == null) {
-            btnCancelar = new JButton("Cancelar");
+            btnCancelar = new BotaoPadrao("Cancelar");
             btnCancelar.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
