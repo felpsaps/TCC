@@ -7,6 +7,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import configurador.Funcionario;
 import dao.FuncionarioDao;
 import excessoes.FuncionarioDaoException;
+import gui.componentes.BotaoPadrao;
+import gui.componentes.TxtFieldMedio;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,13 +25,13 @@ import utils.TextFieldComoTab;
  */
 public class TelaLogin extends JFrame {
 
-    private JTextField txtLogin;
+    private TxtFieldMedio txtLogin;
     private JPasswordField txtSenha;
     private JLabel lblEsqueceuSenha;
     private JLabel lblUsuario;
     private JLabel lblSenha;
-    private JButton btnLogin;
-    private JButton btnCancelar;
+    private BotaoPadrao btnLogin;
+    private BotaoPadrao btnCancelar;
 
     public TelaLogin() {
         super("  Login");
@@ -118,10 +120,9 @@ public class TelaLogin extends JFrame {
         return builder.getPanel();
     }
 
-    private JButton getBtnLogin() {
+    private BotaoPadrao getBtnLogin() {
         if (btnLogin == null) {
-            btnLogin = new JButton("Login");
-            btnLogin.setPreferredSize(MedidasPadroes.MEDIDA_BTNLOGIN);
+            btnLogin = new BotaoPadrao("Login");
             btnLogin.addActionListener(new AcaoLogin());
             return btnLogin;
         } else {
@@ -129,10 +130,9 @@ public class TelaLogin extends JFrame {
         }
     }
 
-    private JButton getBtnCancelar() {
+    private BotaoPadrao getBtnCancelar() {
         if (btnCancelar == null) {
-            btnCancelar = new JButton("Cancelar");
-            btnCancelar.setPreferredSize(MedidasPadroes.MEDIDA_BTNCANCELAR);
+            btnCancelar = new BotaoPadrao("Cancelar");
             btnCancelar.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -195,10 +195,9 @@ public class TelaLogin extends JFrame {
         }
     }
 
-    private JTextField getTxtLogin() {
+    private TxtFieldMedio getTxtLogin() {
         if (txtLogin == null) {
-            txtLogin = new JTextField();
-            txtLogin.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_MEDIO);
+            txtLogin = new TxtFieldMedio();
             TextFieldComoTab.considerarEnterComoTab(txtLogin);
             return txtLogin;
         } else {
