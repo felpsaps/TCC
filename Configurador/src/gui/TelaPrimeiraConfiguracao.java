@@ -9,6 +9,7 @@ import dao.FuncionarioDao;
 import dao.ServidorSMTPDao;
 import email.SendMail;
 import excessoes.ServidorSMTPDaoException;
+import gui.componentes.BotaoPadrao;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.*;
@@ -65,9 +66,9 @@ public class TelaPrimeiraConfiguracao extends JFrame{
     private JComboBox comboServidoresEmailAutomatico;
     
     // Botões
-    private JButton btnOK;
-    private JButton btnCancelar;
-    private JButton btnTestarServidorSMTP;
+    private BotaoPadrao btnOK;
+    private BotaoPadrao btnCancelar;
+    private BotaoPadrao btnTestarServidorSMTP;
     
     private Properties servidoresSMTP;
     
@@ -322,9 +323,9 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         }
     }
     
-    private JButton getBtnTestarServidorSMTP() {
+    private BotaoPadrao getBtnTestarServidorSMTP() {
         if (btnTestarServidorSMTP == null) {
-            btnTestarServidorSMTP = new JButton("Testar Envio Automático");
+            btnTestarServidorSMTP = new BotaoPadrao("Testar Envio Automático");
             btnTestarServidorSMTP.addActionListener(new ActionListener() {
 
                 @Override
@@ -360,20 +361,19 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         }
     }
     
-    private JButton getBtnOK() {
+    private BotaoPadrao getBtnOK() {
         if (btnOK == null) {
-            btnOK = new JButton("OK");
-            btnOK.setSize(MedidasPadroes.MEDIDA_BTNOK);
+            btnOK = new BotaoPadrao("OK");
             btnOK.addActionListener(new AcaoOK());
             return btnOK;
         }
         return btnOK;
     }
     
-    private JButton getBtnCancelar() {
+    private BotaoPadrao getBtnCancelar() {
         if (btnCancelar == null) {
-            btnCancelar = new JButton("Cancelar");
-            btnCancelar.setSize(MedidasPadroes.MEDIDA_BTNCANCELAR);
+            btnCancelar = new BotaoPadrao("Cancelar");
+            btnCancelar.setSize(MedidasPadroes.MEDIDA_BTN_PADRAO);
             btnCancelar.addActionListener(new ActionListener() {
 
                 @Override
@@ -574,8 +574,8 @@ public class TelaPrimeiraConfiguracao extends JFrame{
                 
                 File prop = new File("configuracoes.properties");
                 
-                String usuarioProprietario = Criptografia.criptografar(txtLogin.getText());
-                String senhaProprietario = Criptografia.criptografar(new String(txtSenhaLogin.getPassword()));
+                String usuarioProprietario = txtLogin.getText();
+                String senhaProprietario = new String(txtSenhaLogin.getPassword());
                 
                 configuracoesIniciais.setProperty("login.proprietario", usuarioProprietario);
                 configuracoesIniciais.setProperty("senha.proprietario", senhaProprietario);
