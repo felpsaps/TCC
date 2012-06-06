@@ -15,7 +15,7 @@ import utils.MedidasPadroes;
 
 public class TelaPrincipal extends JFrame {
     
-    private Funcionario func;
+    public static Funcionario func;
 
     private JButton btnCadastrar;
     private JButton btnRemover;
@@ -30,6 +30,8 @@ public class TelaPrincipal extends JFrame {
 
     private JMenuBar menuBar;
     private JMenu arquivoItem;
+    
+    private static CardLayout cardLayout = null;
 
     public TelaPrincipal(Funcionario f) {
         func = f;
@@ -58,8 +60,9 @@ public class TelaPrincipal extends JFrame {
 
     private JPanel getPainelCardLayout() {
         if (painelCardLayout == null) {
+            cardLayout = new CardLayout();
             painelCardLayout = new JPanel();
-            painelCardLayout.setLayout(new CardLayout());
+            painelCardLayout.setLayout(cardLayout);
             painelCardLayout.add(getPainelPrincipal(), "principal");
             return painelCardLayout;
         } else {
@@ -120,7 +123,15 @@ public class TelaPrincipal extends JFrame {
 
     private JButton getBtnCadastrar() {
         if (btnCadastrar == null) {
-            btnCadastrar = new JButton("Cadastrar Funcionário");
+            btnCadastrar = new JButton("Manter Funcionário");
+            btnCadastrar.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    getPainelCardLayout().add(new ConsultarFuncionario(TelaPrincipal.this), "consultar");
+                    cardLayout.show(painelCardLayout, "consultar");                    
+                }
+            });
             return btnCadastrar;
         } else {
             return btnCadastrar;
@@ -144,6 +155,17 @@ public class TelaPrincipal extends JFrame {
         } else {
             return painelPrincipal;
         }
+    }
+    
+    public void setPainelPrincipal(Component painel) {
+        cardLayout.removeLayoutComponent(painel);
+        cardLayout.show(painelCardLayout, "principal");
+    }
+    
+    public void setPainel(Component painelRemover, Component painelIncluir, String nomePainel) {
+        cardLayout.removeLayoutComponent(painelRemover);
+        painelCardLayout.add(nomePainel, painelIncluir);
+        cardLayout.show(painelCardLayout, nomePainel);
     }
 
     private JLabel getLblSair() {
