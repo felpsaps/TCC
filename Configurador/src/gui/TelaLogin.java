@@ -219,6 +219,10 @@ public class TelaLogin extends JFrame {
     private class AcaoLogin extends AbstractAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (txtLogin == null || txtLogin.getText().equals("")
+                || txtSenha == null || new String(txtSenha.getPassword()).equals("")) {
+                    return;
+                }
             try {
                 Funcionario func = FuncionarioDao.selectLoginESenha(txtLogin.getText(), 
                         new String(txtSenha.getPassword()));
