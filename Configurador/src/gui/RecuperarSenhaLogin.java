@@ -7,7 +7,6 @@ import configurador.Funcionario;
 import configurador.ServidorSMTP;
 import dao.FuncionarioDao;
 import dao.ServidorSMTPDao;
-import email.SendMail;
 import excessoes.FuncionarioDaoException;
 import excessoes.ServidorSMTPDaoException;
 import gui.componentes.BotaoPadrao;
@@ -76,7 +75,6 @@ public class RecuperarSenhaLogin extends JDialog{
         PanelBuilder builder = new PanelBuilder(layout);
         builder.add(getTxtEmail(), cc.xy(1, 1));
         builder.setBackground(MedidasPadroes.COR_DE_FUNDO);
-        
         return builder.getPanel();
     }
     
@@ -182,10 +180,10 @@ public class RecuperarSenhaLogin extends JDialog{
 
                     @Override
                     public void run() {
-                        SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
-                                servidorSMTP.getEmail(), servidorSMTP.getSenha());
-                        mail.sendMail(func.getEmail(), "RecuperaÃ§Ã£o de Senha",
-                                getMensagemEmail(novaSenha, func.getNome()), RecuperarSenhaLogin.this);
+//                        SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
+//                                servidorSMTP.getEmail(), servidorSMTP.getSenha());
+//                        mail.sendMail(func.getEmail(), "Recuperação de Senha",
+//                                getMensagemEmail(novaSenha, func.getNome()), RecuperarSenhaLogin.this);
                     }
                 });
                 JOptionPane.showMessageDialog(RecuperarSenhaLogin.this, "Sua nova senha foi enviada com sucesso!",

@@ -96,7 +96,7 @@ public class ConsultarFuncionario extends JPanel{
         lbl.setForeground(MedidasPadroes.COR_LABEL);
         
         builder.add(lbl, cc.xy(1, 1));
-        builder.add(getTxtBuscarFuncionário(), cc.xy(1, 3));
+        builder.add(getTxtBuscarFuncionario(), cc.xy(1, 3));
         builder.setBackground(MedidasPadroes.COR_DE_FUNDO);
         
         
@@ -193,7 +193,7 @@ public class ConsultarFuncionario extends JPanel{
         }
     }
     
-    private JTextField getTxtBuscarFuncionário() {
+    private JTextField getTxtBuscarFuncionario() {
         if (txtBuscarFuncionario == null) {
             txtBuscarFuncionario = new JTextField();
             txtBuscarFuncionario.setPreferredSize(MedidasPadroes.MEDIDA_TEXTFIELD_GRANDE);

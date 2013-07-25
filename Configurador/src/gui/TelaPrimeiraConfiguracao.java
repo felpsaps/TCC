@@ -7,7 +7,6 @@ import configurador.Funcionario;
 import configurador.ServidorSMTP;
 import dao.FuncionarioDao;
 import dao.ServidorSMTPDao;
-import email.SendMail;
 import excessoes.ServidorSMTPDaoException;
 import gui.componentes.BotaoPadrao;
 import java.awt.Color;
@@ -341,18 +340,18 @@ public class TelaPrimeiraConfiguracao extends JFrame{
                             new String(txtSenhaEmailEnvioAutomatico.getPassword()), portaServidor,
                             txtEmailEnvioAutomatico.getText());
 
-                    SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
-                            servidorSMTP.getEmail(), servidorSMTP.getSenha());
-                    mail.sendMail(txtEmail.getText(), "Teste Email Automático",
-                            "Teste de envio automático", TelaPrimeiraConfiguracao.this);
-                    if (mail.getSucesso()) {
-                        setCorLabels(Color.BLACK);
-                        JOptionPane.showMessageDialog(TelaPrimeiraConfiguracao.this, "Email Enviado com Sucesso!\n"
-                                + "Verifique sua caixa de email.\n"
-                                + "Email enviado para: " + txtEmail.getText(), "Sucesso!", 
-                                JOptionPane.INFORMATION_MESSAGE);
-                        btnTestarServidorSMTP.setEnabled(false);
-                    }
+//                    SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
+//                            servidorSMTP.getEmail(), servidorSMTP.getSenha());
+//                    mail.sendMail(txtEmail.getText(), "Teste Email Automático",
+//                            "Teste de envio automático", TelaPrimeiraConfiguracao.this);
+//                    if (mail.getSucesso()) {
+//                        setCorLabels(Color.BLACK);
+//                        JOptionPane.showMessageDialog(TelaPrimeiraConfiguracao.this, "Email Enviado com Sucesso!\n"
+//                                + "Verifique sua caixa de email.\n"
+//                                + "Email enviado para: " + txtEmail.getText(), "Sucesso!", 
+//                                JOptionPane.INFORMATION_MESSAGE);
+//                        btnTestarServidorSMTP.setEnabled(false);
+//                    }
                 }                
             });
             return btnTestarServidorSMTP;
