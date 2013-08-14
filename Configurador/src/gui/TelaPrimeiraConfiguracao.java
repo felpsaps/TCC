@@ -11,6 +11,7 @@ import excessoes.ServidorSMTPDaoException;
 import gui.componentes.BotaoPadrao;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +27,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
 import utils.Criptografia;
+import utils.Email;
 import utils.LeitorArquivoConfiguracoes;
 import utils.LeitorArquivoServidoresSMTP;
 import utils.MedidasPadroes;
@@ -97,6 +99,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
         comboServidoresEmailAutomatico.setSelectedItem("gmail");
         txtEmailEnvioAutomatico.setEnabled(true);
         txtEmailEnvioAutomatico.setText("felipeaps89@gmail.com");
+        btnTestarServidorSMTP.setEnabled(false);
     }
     
     private void montarComboServidoresSMTP() {
@@ -325,6 +328,7 @@ public class TelaPrimeiraConfiguracao extends JFrame{
     private BotaoPadrao getBtnTestarServidorSMTP() {
         if (btnTestarServidorSMTP == null) {
             btnTestarServidorSMTP = new BotaoPadrao("Testar Envio Automático");
+            btnTestarServidorSMTP.setPreferredSize(new Dimension(170, 28));
             btnTestarServidorSMTP.addActionListener(new ActionListener() {
 
                 @Override
@@ -340,18 +344,18 @@ public class TelaPrimeiraConfiguracao extends JFrame{
                             new String(txtSenhaEmailEnvioAutomatico.getPassword()), portaServidor,
                             txtEmailEnvioAutomatico.getText());
 
-//                    SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
-//                            servidorSMTP.getEmail(), servidorSMTP.getSenha());
-//                    mail.sendMail(txtEmail.getText(), "Teste Email Automático",
-//                            "Teste de envio automático", TelaPrimeiraConfiguracao.this);
-//                    if (mail.getSucesso()) {
-//                        setCorLabels(Color.BLACK);
-//                        JOptionPane.showMessageDialog(TelaPrimeiraConfiguracao.this, "Email Enviado com Sucesso!\n"
-//                                + "Verifique sua caixa de email.\n"
-//                                + "Email enviado para: " + txtEmail.getText(), "Sucesso!", 
-//                                JOptionPane.INFORMATION_MESSAGE);
-//                        btnTestarServidorSMTP.setEnabled(false);
-//                    }
+                    Email mail = new Email(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
+                            servidorSMTP.getEmail(), servidorSMTP.getSenha());
+                    mail.sendMail(txtEmail.getText(), "Teste Email Automático",
+                            "Teste de envio automático", TelaPrimeiraConfiguracao.this);
+                    if (mail.getSucesso()) {
+                        setCorLabels(Color.BLACK);
+                        JOptionPane.showMessageDialog(TelaPrimeiraConfiguracao.this, "Email Enviado com Sucesso!\n"
+                                + "Verifique sua caixa de email.\n"
+                                + "Email enviado para: " + txtEmail.getText(), "Sucesso!", 
+                                JOptionPane.INFORMATION_MESSAGE);
+                        btnTestarServidorSMTP.setEnabled(false);
+                    }
                 }                
             });
             return btnTestarServidorSMTP;

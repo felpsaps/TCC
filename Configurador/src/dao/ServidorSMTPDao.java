@@ -1,12 +1,11 @@
 package dao;
 
-import configurador.Funcionario;
-import configurador.ServidorSMTP;
-import excessoes.FuncionarioDaoException;
-import excessoes.ServidorSMTPDaoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import utils.Criptografia;
+import configurador.ServidorSMTP;
+import excessoes.ServidorSMTPDaoException;
 
 /**
  *
@@ -18,15 +17,16 @@ public class ServidorSMTPDao extends Dao{
     public static void insere(ServidorSMTP sv) throws SQLException
     {
         String comandoInsert;
-
-        comandoInsert = String.format("INSERT INTO `servidorSMTP` (`nome`, "
-                + "`endereco`, `senha`, `porta`, `email`) "
+        
+        estabeleceConexao();
+        comandoInsert = String.format("INSERT INTO servidorSMTP (nome, "
+                + "endereco, senha, porta, email) "
                 + "VALUES ('%s', '%s', '%s', '%s', '%s');",
                 sv.getNomeServidor(), sv.getEnderecoServidor(), getSenhaCriptografada(sv.getSenha()),
                 sv.getPorta(), sv.getEmail());
 
-        estabeleceConexao();
         comando.executeUpdate(comandoInsert);
+        getCon().commit();
         fechaConexao();
     }
     
@@ -40,6 +40,7 @@ public class ServidorSMTPDao extends Dao{
 
         estabeleceConexao();
         comando.executeUpdate(comandoRemove);
+        getCon().commit();
         fechaConexao();
     }
     
@@ -56,6 +57,7 @@ public class ServidorSMTPDao extends Dao{
 
         estabeleceConexao();
         comando.executeUpdate(comandoAtualiza);
+        getCon().commit();
         fechaConexao();
     }    
     
@@ -68,9 +70,8 @@ public class ServidorSMTPDao extends Dao{
         ResultSet rs = comando.executeQuery(comandoSelect);
          
         if (rs.next()) {
-            String pass2 = getSenhaDescriptografada(rs.getString(3));
-            servidor = new ServidorSMTP(rs.getString(1), rs.getString(2), pass2, rs.getString(4), 
-                    rs.getString(5));             
+            servidor = new ServidorSMTP(rs.getString("nome"), rs.getString("endereco"), 
+                    getSenhaDescriptografada(rs.getString("senha")), rs.getString("porta"), rs.getString("email"));             
         }        
         fechaConexao();
         return servidor;        
@@ -84,8 +85,8 @@ public class ServidorSMTPDao extends Dao{
         ResultSet rs = comando.executeQuery(comandoSelect);
          
         if (rs.next()) {
-            servidor = new ServidorSMTP(rs.getString(1), rs.getString(2), 
-                    getSenhaDescriptografada(rs.getString(3)), rs.getString(4), rs.getString(5));
+            servidor = new ServidorSMTP(rs.getString("nome"), rs.getString("endereco"), 
+                    getSenhaDescriptografada(rs.getString("senha")), rs.getString("porta"), rs.getString("email"));
         } else {
             throw new ServidorSMTPDaoException("Erro ao Tentar Recuperar o Servidor SMTP!");
         }

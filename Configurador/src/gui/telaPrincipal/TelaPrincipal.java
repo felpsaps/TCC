@@ -18,7 +18,7 @@ public class TelaPrincipal extends JFrame {
     public static Funcionario func;
 
     private JButton btnCadastrar;
-    private JButton btnRemover;
+    private JButton btnRelatorios;
     private JButton btnConfiguracoes;
 
     private JLabel lblSair;
@@ -91,6 +91,11 @@ public class TelaPrincipal extends JFrame {
             painelBotoes.add(getBtnRemover(), cc.xy(2, 4));
             painelBotoes.add(getBtnConfigurar(), cc.xy(2, 6));
             painelBotoes.setBackground(Color.red);
+            
+            if (func.getTipo() != Funcionario.TIPO_PROPRIETARIO) {
+            	getBtnRemover().setVisible(false);
+            }
+            
             return painelBotoes;
         } else {
             return painelBotoes;
@@ -98,17 +103,17 @@ public class TelaPrincipal extends JFrame {
     }
     
     private JButton getBtnRemover() {
-        if (btnRemover == null) {
-            btnRemover = new JButton("Remover Funcionário");
-            btnRemover.addActionListener(new ActionListener() {
+        if (btnRelatorios == null) {
+            btnRelatorios = new JButton("Relatórios");
+            btnRelatorios.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 }
             });
-            return btnRemover;
+            return btnRelatorios;
         } else {
-            return btnRemover;
+            return btnRelatorios;
         }
     }
 
@@ -176,7 +181,6 @@ public class TelaPrincipal extends JFrame {
             lblSair.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    //(CardLayout)getPainelCardLayout().getLayout()).show(painelCardLayout, "teste");
                     String[] op = {"Sim", "Não"};
                     int resp = JOptionPane.showOptionDialog(TelaPrincipal.this, "Deseja mesmo sair?", "Atenção!",
                             JOptionPane.INFORMATION_MESSAGE,JOptionPane.YES_NO_OPTION, null, op, op[1]);

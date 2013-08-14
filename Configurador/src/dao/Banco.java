@@ -22,15 +22,15 @@ public class Banco {
     public static Connection connect() throws SQLException
     {
         if (con == null)
-            criaConexao("root", "230898");
+            criaConexao("postgres", "890823Fe");
         return con;
     }
-    public static void criaConexao(String usuario, String senha) throws SQLException
+    private static void criaConexao(String usuario, String senha) throws SQLException
     {
-        String driver = "com.mysql.jdbc.Driver";
+    	String driver = "org.postgresql.Driver";
         String banco = "estacionamento";
-        String host = "localhost";
-        String strConn = "jdbc:mysql://" + host + ":3306/" + banco;
+        String host = "localhost:5432";
+        String strConn = "jdbc:postgresql://" + host + "/" + banco;
         try {
             Class.forName(driver);
         } catch (ClassNotFoundException ex) {
@@ -40,6 +40,7 @@ public class Banco {
             System.exit(1);
         }
         con = DriverManager.getConnection(strConn, usuario, senha);
+        setAutoCommit(false);
     }
     public static void setAutoCommit(boolean a) throws SQLException
     {

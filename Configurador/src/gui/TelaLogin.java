@@ -67,7 +67,7 @@ public class TelaLogin extends JFrame {
 
     private JPanel getLinha1() {
         FormLayout layout = new FormLayout("175dlu, pref, 3dlu, pref, 3dlu", //Colunas
-                "80dlu, pref" //Linhas
+                						   "80dlu, pref" //Linhas
                 );
         PanelBuilder builder = new PanelBuilder(layout);
         CellConstraints cc = new CellConstraints();

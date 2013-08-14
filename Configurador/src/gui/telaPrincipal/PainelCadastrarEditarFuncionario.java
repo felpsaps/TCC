@@ -252,8 +252,15 @@ public class PainelCadastrarEditarFuncionario extends JPanel{
             comboVagas.addItem("Não Reservar");
             
             for (Vaga v : VagasDao.selectVagas()) {
-                if (v.getReservadaPara() == null) {
-                    comboVagas.addItem(v.getCodigo());
+                if (v.getReservadaPara() == null || "".equals(v.getReservadaPara())) {
+                    comboVagas.addItem(v.getNumero());
+                } 
+                
+                if (modo == MODO_EDITAR) {
+	                if (v.getReservadaPara() != null && v.getReservadaPara().equals(editarFunc.getCodigo())) {
+	                	comboVagas.addItem(v.getNumero());
+	                	comboVagas.setSelectedItem(v.getNumero());
+	                }
                 }
             }
             
@@ -325,6 +332,7 @@ public class PainelCadastrarEditarFuncionario extends JPanel{
             txtCodigo = new TxtFieldGrande();
             if (modo == MODO_EDITAR) {
                 txtCodigo.setText(editarFunc.getCodigo());
+                txtCodigo.setEnabled(false);
             }
             return txtCodigo;
         } else {
@@ -379,6 +387,11 @@ public class PainelCadastrarEditarFuncionario extends JPanel{
                 }
 
                 FuncionarioDao.insere(f);
+                
+                if (comboVagas.getSelectedIndex() != 0) {
+                	VagasDao.reservaVaga((Integer)comboVagas.getSelectedItem(), f.getCodigo());
+                }
+                
                 JOptionPane.showMessageDialog(PainelCadastrarEditarFuncionario.this, 
                         "Funcionário Adicionado com Sucesso!!", 
                         "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
@@ -390,6 +403,7 @@ public class PainelCadastrarEditarFuncionario extends JPanel{
                 editarFunc.setCelular(txtCelular.getValue().toString());
                 editarFunc.setEmail(txtEmail.getText());
                 editarFunc.setNome(txtNome.getText());
+                editarFunc.setCodigo(txtCodigo.getText());
                 if (editarFunc.getTipo() == Funcionario.TIPO_ADMINISTRADOR
                     || editarFunc.getTipo() == Funcionario.TIPO_PROPRIETARIO) {
                     editarFunc.setLogin(txtLogin.getText());
@@ -397,6 +411,10 @@ public class PainelCadastrarEditarFuncionario extends JPanel{
                 }
                 
                 FuncionarioDao.atualiza(editarFunc);
+                
+                Integer vg = comboVagas.getSelectedIndex() == 0 ? 0 : (Integer)comboVagas.getSelectedItem();
+                VagasDao.atualizarReservaVaga(vg, editarFunc.getCodigo());
+                
                 JOptionPane.showMessageDialog(PainelCadastrarEditarFuncionario.this, 
                         "Funcionário Atualizado com Sucesso!!", 
                         "Sucesso!", JOptionPane.INFORMATION_MESSAGE);

@@ -2,6 +2,9 @@ package dao;
 
 import configurador.Funcionario;
 import excessoes.FuncionarioDaoException;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,20 +23,51 @@ public class FuncionarioDao extends Dao {
      */
     public static void insere(Funcionario func)
     {
+    	PreparedStatement ps = null;
         try {
-            String comandoInsert;
+        	StringBuilder comandoInsert = new StringBuilder();
+        	estabeleceConexao();
+            comandoInsert.append(" INSERT INTO \n")
+            			 .append(" 		funcionario (\n")
+            			 .append(" 			usr_codigo,\n")
+            			 .append(" 			usr_nome,\n")
+            			 .append(" 			usr_email,\n")
+            			 .append(" 			usr_celular,\n")
+            			 .append(" 			usr_tipo,")
+            			 .append(" 			usr_login,\n")
+            			 .append(" 			usr_senha\n")
+            			 .append(" 		)\n")
+            			 .append(" 		VALUES(\n")
+            			 .append(" 			?,?,?,?,?,?,?\n")
+            			 .append(" 		)\n");
+            
+            ps = getCon().prepareStatement(comandoInsert.toString());
+            ps.setString(1, func.getCodigo());
+            ps.setString(2, func.getNome());
+            ps.setString(3, func.getEmail());
+            ps.setString(4, func.getCelular());
+            ps.setInt(5, func.getTipo());
+            ps.setString(6, getSenhaCriptografada(func.getLogin()));
+            ps.setString(7, getSenhaCriptografada(func.getSenha()));
 
-            comandoInsert = String.format("INSERT INTO `funcionario` (`codigo`, `nome`, "
-                    + "`email`, `celular`, `tipo`, `login`, `senha`) "
-                    + "VALUES ('%s', '%s', '%s', '%s', '%d', '%s', '%s');",
-                    func.getCodigo(), func.getNome(), func.getEmail(), func.getCelular(), func.getTipo(),
-                    getSenhaCriptografada(func.getLogin()), getSenhaCriptografada(func.getSenha()));
-
-            estabeleceConexao();
-            comando.executeUpdate(comandoInsert);
-            fechaConexao();
+            
+            ps.executeUpdate();
+            getCon().commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } finally {
+        	if (ps != null) {
+        		try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+        	}
+        	try {
+				fechaConexao();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
         }
     }
 
@@ -47,11 +81,12 @@ public class FuncionarioDao extends Dao {
             String comandoRemove;
 
             comandoRemove = String.format("DELETE FROM `funcionario` "
-                    + "WHERE (`codigo`= '%s')",
+                    + "WHERE (`usr_codigo`= '%s')",
                     codigo);
 
             estabeleceConexao();
             comando.executeUpdate(comandoRemove);
+            getCon().commit();
             fechaConexao();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -67,9 +102,9 @@ public class FuncionarioDao extends Dao {
         try{
             String comandoAtualiza;
 
-            comandoAtualiza = String.format("UPDATE `funcionario` SET nome='%s', "
-                    + "email='%s', celular='%s', tipo='%d', login='%s', "
-                    + "senha='%s' WHERE codigo = '%s'",
+            comandoAtualiza = String.format("UPDATE funcionario SET usr_nome='%s', "
+                    + "usr_email='%s', usr_celular='%s', usr_tipo='%d', usr_login='%s', "
+                    + "usr_senha='%s' WHERE usr_codigo = '%s'",
                     func.getNome(), func.getEmail(), func.getCelular(), func.getTipo(), 
                     getSenhaCriptografada(func.getLogin()), getSenhaCriptografada(func.getSenha()), 
                     func.getCodigo());
@@ -77,6 +112,7 @@ public class FuncionarioDao extends Dao {
 
             estabeleceConexao();
             comando.executeUpdate(comandoAtualiza);
+            getCon().commit();
             fechaConexao();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -86,15 +122,15 @@ public class FuncionarioDao extends Dao {
     public static Funcionario selectPorCodigo(String cod)  {
          try {
              Funcionario func = null;
-             String comandoSelect = String.format("select * from funcionario where codigo='" + cod + "'");
+             String comandoSelect = String.format("select * from funcionario where usr_codigo='" + cod + "'");
 
              estabeleceConexao();
              ResultSet rs = comando.executeQuery(comandoSelect);
 
              if (rs.next()) {
                  func = new Funcionario(rs.getString(1), rs.getString(2), rs.getString(3),
-                         rs.getString(4), rs.getInt(5), getSenhaDescriptografada(rs.getString(6)),
-                         getSenhaDescriptografada(rs.getString(7)));
+                         rs.getString(4), rs.getInt(5), getSenhaDescriptografada(rs.getString("usr_login") == null ? "" : rs.getString("usr_login")),
+                         getSenhaDescriptografada(rs.getString("usr_senha") == null ? "" : rs.getString("usr_senha")));
              }
              fechaConexao();
              return func;
@@ -107,7 +143,7 @@ public class FuncionarioDao extends Dao {
      public static List<Funcionario> selectTodosFuncionarios()  {
          try {
              List<Funcionario> func = new ArrayList<Funcionario>(50);
-             String comandoSelect = String.format("select * from funcionario order by tipo");
+             String comandoSelect = String.format("select * from funcionario order by usr_tipo");
 
              estabeleceConexao();
              ResultSet rs = comando.executeQuery(comandoSelect);
@@ -128,7 +164,7 @@ public class FuncionarioDao extends Dao {
          try {
              List<Funcionario> func = new ArrayList<Funcionario>(50);
              String charactere = "%";
-             String comandoSelect = "select * from funcionario where nome LIKE '" + nome
+             String comandoSelect = "select * from funcionario where usr_nome ILIKE '" + nome
                      + charactere + "'";
 
              estabeleceConexao();
@@ -149,7 +185,7 @@ public class FuncionarioDao extends Dao {
     
     public static Funcionario selectPorEmail(String email) throws SQLException, FuncionarioDaoException {
         Funcionario func;
-        String comandoSelect = String.format("select * from funcionario where email='%s'",
+        String comandoSelect = String.format("select * from funcionario where usr_email='%s'",
                                               email);
         
         estabeleceConexao();
@@ -176,7 +212,7 @@ public class FuncionarioDao extends Dao {
     public static Funcionario selectLoginESenha(String login, String senha) throws SQLException, FuncionarioDaoException
     {
         Funcionario func;
-        String comandoSelect = String.format("select * from funcionario where login='%s'",
+        String comandoSelect = String.format("select * from funcionario where usr_login='%s'",
                                               getSenhaCriptografada(login));
 
         estabeleceConexao();

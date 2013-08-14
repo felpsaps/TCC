@@ -49,6 +49,9 @@ public class Criptografia {
 
     public static String descriptografar(String str) {
         try {
+        	if (str == null) {
+        		return null;
+        	}
             // Decode base64 to get bytes
             byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(str);
 

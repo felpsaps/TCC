@@ -34,6 +34,10 @@ public class Dao {
         conexao = Banco.connect();
         comando = conexao.createStatement();
     }
+    
+    public static Connection getCon() {
+    	return conexao;
+    }
 
     /**
      * Fecha uma conexão e o statement cm o banco de dados
@@ -42,7 +46,9 @@ public class Dao {
      */
     protected static void fechaConexao() throws SQLException
     {
-        comando.close();
+    	if (comando != null) {
+    		comando.close();
+    	}
     }
 
 

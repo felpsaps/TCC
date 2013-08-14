@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Random;
 import javax.swing.*;
+
+import utils.Email;
 import utils.MedidasPadroes;
 
 /**
@@ -180,10 +182,10 @@ public class RecuperarSenhaLogin extends JDialog{
 
                     @Override
                     public void run() {
-//                        SendMail mail = new SendMail(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
-//                                servidorSMTP.getEmail(), servidorSMTP.getSenha());
-//                        mail.sendMail(func.getEmail(), "Recuperação de Senha",
-//                                getMensagemEmail(novaSenha, func.getNome()), RecuperarSenhaLogin.this);
+                        Email mail = new Email(servidorSMTP.getEnderecoServidor(), servidorSMTP.getPorta(),
+                                servidorSMTP.getEmail(), servidorSMTP.getSenha());
+                        mail.sendMail(func.getEmail(), "RecuperaÃ§Ã£o de Senha",
+                                getMensagemEmail(novaSenha, func.getNome()), RecuperarSenhaLogin.this);
                     }
                 });
                 JOptionPane.showMessageDialog(RecuperarSenhaLogin.this, "Sua nova senha foi enviada com sucesso!",
@@ -192,9 +194,11 @@ public class RecuperarSenhaLogin extends JDialog{
                 enviarEmail.start();
 
             } catch(FuncionarioDaoException ex) {
+            	ex.printStackTrace();
                 JOptionPane.showMessageDialog(RecuperarSenhaLogin.this, ex.getMessage(), "Email NÃ£o Cadastrado!", 
                         JOptionPane.ERROR_MESSAGE);
             } catch (ServidorSMTPDaoException ex) {
+            	ex.printStackTrace();
                 JOptionPane.showMessageDialog(RecuperarSenhaLogin.this, ex.getMessage(), "Erro!", 
                         JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {

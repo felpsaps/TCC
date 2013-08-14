@@ -1,0 +1,9 @@
+
+insert into vaga (vg_numero) values (1);
+insert into vaga (vg_numero) values (2);
+insert into vaga (vg_numero) values (3);
+insert into vaga (vg_numero) values (4);
+insert into vaga (vg_numero) values (5);
+insert into vaga (vg_numero) values (6);
+insert into vaga (vg_numero) values (7);
+insert into vaga (vg_numero) values (8);

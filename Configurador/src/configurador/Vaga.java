@@ -6,30 +6,43 @@ package configurador;
  */
 public class Vaga {
     
-    private String codigo;
+    private int id;
     private String reservadaPara;
-    private String nivel;
+    private int numero;
     private int disponibilidade;
     
     public static final int INDISPONIVEL = 0;
     public static final int DISPONIVEL = 1;
     
-    public Vaga(String cod, String n, String resPara, int disp) {
-        codigo = cod;
-        nivel = n;
+    public Vaga(int id, int n, String resPara, int disp) {
+        this.id = id;
+        numero = n;
         reservadaPara = resPara;
         disponibilidade = disp;        
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    
+    public int getId() {
+		return id;
+	}
 
-    public void setCodigo(String cod) {
-        codigo = cod;
-    }
 
-    public int getDisponibilidade() {
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public int getNumero() {
+		return numero;
+	}
+
+
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+
+
+	public int getDisponibilidade() {
         return disponibilidade;
     }
 
@@ -37,13 +50,6 @@ public class Vaga {
         this.disponibilidade = disp;
     }
 
-    public String getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(String n) {
-        this.nivel = n;
-    }
 
     public String getReservadaPara() {
         return reservadaPara;
