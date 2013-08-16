@@ -109,6 +109,8 @@ public class TelaPrincipal extends JFrame {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                	getPainelCardLayout().add(new PainelRelatorios(TelaPrincipal.this), "relatorios");
+                    cardLayout.show(painelCardLayout, "relatorios"); 
                 }
             });
             return btnRelatorios;

@@ -36,6 +36,13 @@ public class Dao {
     }
     
     public static Connection getCon() {
+    	if (conexao == null) {
+    		try {
+				estabeleceConexao();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+    	}
     	return conexao;
     }
 

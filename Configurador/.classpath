@@ -6,5 +6,14 @@
 	<classpathentry kind="lib" path="C:/Users/felps/Desktop/jgoodies-forms-1.4.2/jgoodies-forms-1.4.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/postgresql-9.2-1002.jdbc4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/javax.mail.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/iText-2.1.7.js2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/jcommon-1.0.15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/jdt-compiler-3.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/jasperreports-5.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/commons-collections-2.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/groovy-all-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

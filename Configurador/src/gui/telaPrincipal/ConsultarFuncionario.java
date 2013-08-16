@@ -48,14 +48,6 @@ public class ConsultarFuncionario extends JPanel{
     }
     
     private void init() {
-//        FuncionarioDao.insere(new Funcionario("5", "AAA", "AAAAA", "222222", 1, "admin", "admin"));
-//        FuncionarioDao.insere(new Funcionario("9", "Maria", "AAAAA", "222222", 2));
-//        FuncionarioDao.insere(new Funcionario("6", "Joao", "AAAAA", "222222", 2));
-//        FuncionarioDao.insere(new Funcionario("7", "Jose", "AAAAA", "222222", 2));
-//        FuncionarioDao.insere(new Funcionario("8", "Pedro", "AAAAA", "222222", 2));
-//        FuncionarioDao.insere(new Funcionario("10", "Silva", "AAAAA", "222222", 1, "a", "a"));
-//        FuncionarioDao.insere(new Funcionario("11", "Carol", "AAAAA", "222222", 1, "b", "b"));
-//        FuncionarioDao.insere(new Funcionario("12", "Octavio", "AAAAA", "222222", 1, "c", "c"));
         FormLayout layout = new FormLayout("30dlu, pref",
                                            "80dlu, pref, 3dlu, pref, 3dlu, pref");
         CellConstraints cc = new CellConstraints();
