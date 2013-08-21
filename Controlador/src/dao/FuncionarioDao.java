@@ -76,7 +76,7 @@ public class FuncionarioDao extends Dao {
     
     public void selectLoginESenha(String login) throws SQLException
     {
-        String comandoSelect = String.format("select* from funcionario where codigo='%s'",
+        String comandoSelect = String.format("select* from funcionario where usr_codigo='%s'",
                                               login);
 
         estabeleceConexao();
