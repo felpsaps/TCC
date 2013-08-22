@@ -66,6 +66,7 @@ public class SensorController {
                     		System.out.println();
                     		leds = 0;
                 		}
+                		// TODO GRAVAR NO BD AS MUDANÇAS DE STATUS
                 		leds++;
                 		System.out.print(new String(buffer,0,len).codePointAt(0) + " - ");
                 	}
