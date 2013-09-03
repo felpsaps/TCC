@@ -2,6 +2,8 @@ package gui.telaPrincipal;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.nitido.utils.toaster.Toaster;
+
 import configurador.Funcionario;
 import gui.TelaLogin;
 import java.awt.*;
@@ -10,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
+
 import utils.MedidasPadroes;
 
 
@@ -39,6 +42,7 @@ public class TelaPrincipal extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
+        new MostraToaster().start();
     }
 
     private void init() {
@@ -54,7 +58,8 @@ public class TelaPrincipal extends JFrame {
 
         add(getPainelBotoes(), cc.xy(1, 1));
         add(getPainelSeparador(), cc.xy(2, 1));
-        add(getPainelCardLayout(), cc.xy(3, 1));
+        add(getPainelCardLayout(), cc.xy(3, 1));      
+        
 
     }
 
@@ -235,5 +240,26 @@ public class TelaPrincipal extends JFrame {
         } else {
             return lblConfigurarConta;
         }
+    }
+    
+    private class MostraToaster extends Thread {
+    	public void run() {
+    		Toaster t = new Toaster();
+            Icon ic = new ImageIcon(getClass().getClassLoader().getResource("arquivos/alert1.png"));
+            t.setToasterHeight(100);
+            t.setToasterWidth(410);
+            t.setStep(2);
+            while (true) {
+        		/* VERIFICA SE HA NOVAS MENSAGENS 
+        		 * SE TIVER MOSTRA O TOASTER */
+                t.showToaster(ic, "a");
+                
+	    		try {
+					Thread.sleep(1000 * 60);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+            }
+    	}
     }
 }

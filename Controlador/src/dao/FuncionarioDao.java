@@ -35,7 +35,7 @@ public class FuncionarioDao extends Dao {
         	ResultSet rs1 = null;
         	
         	// PEGA O ULTIMO REGISTRO DELE
-        	sql.append(" SELECT * \n")
+        	sql.append(" SELECT to_char(reg_data, 'dd/MM/yy hh24:MI:ss') as data, registro.* \n")
         	   .append(" FROM \n")
         	   .append("	registro \n")
         	   .append(" WHERE \n")
@@ -48,35 +48,40 @@ public class FuncionarioDao extends Dao {
         	
         	rs1 = ps.executeQuery();
         	
-        	// ADICIONAR REGISTRO DE ENTRADA OU SAIDA
-        	sql.setLength(0);
-        	sql.append(" INSERT INTO \n")
-     	   	   .append(" 	registro ( \n")
-     	   	   .append("		reg_usr_cod, \n")
-     	   	   .append("		reg_tipo, \n")
-     	   	   .append("		reg_data \n")
-     	   	   //.append("		reg_permanencia \n")
-     	   	   .append(" 	) \n")
-     	   	   .append(" VALUES ( ")
-     	   	   .append(" 	?, ")
-     	   	   .append(" 	?, ")
-     	   	   .append(" 	now()) ");
-     	   	   //.append(" 	?) ");        	
-
-        	ps = getCon().prepareStatement(sql.toString());
-        	ps.setString(1, f.getCodigo());
+        	
         	
         	if (rs1.next()) {
+        		// ADICIONAR REGISTRO DE ENTRADA OU SAIDA
+            	sql.setLength(0);
+            	sql.append(" INSERT INTO \n")
+         	   	   .append(" 	registro ( \n")
+         	   	   .append("		reg_usr_cod, \n")
+         	   	   .append("		reg_tipo, \n")
+         	   	   .append("		reg_data \n");
+         	   	   if ("Entrada".equals(rs1.getString("reg_tipo"))) {
+         	   		sql.append("		,reg_permanencia \n");
+         	   	   }
+         	   	sql.append(" 	) \n")
+         	   	   .append(" VALUES ( \n")
+         	   	   .append(" 	?, \n")
+         	   	   .append(" 	?, \n")
+         	   	   .append(" 	now() \n");
+         	   	   if ("Entrada".equals(rs1.getString("reg_tipo"))) {
+         	   		   sql.append(" 	,now() - to_timestamp('" + rs1.getString("data") +"', 'dd/MM/yy hh24:mi:ss') \n");
+         	   	   }
+      	   	   	   sql.append(" 	) \n");        	
+
+            	ps = getCon().prepareStatement(sql.toString());
+            	ps.setString(1, f.getCodigo());
+        		
         		// VERIFICA SE O ULTIMO REGISTRO EH DE ENTRADA OU SAIDA
         		if ("Saída".equals(rs1.getString("reg_tipo"))) {
         			/* ADICIONA O FUNCIONARIO NA LISTA DE FUNCIONARIO QUE AINDA NAO ESTACIONARAM */
                 	ListaUsuarios.getInstance().addFunc(f);
                 	
                 	ps.setString(2, "Entrada");
-                	//ps.setNull(3, Types.NULL);
         		} else {
                 	ps.setString(2, "Saída");
-                	//ps.setTime(3, new Time(rs1.getDate("reg_data").getTime() - new GregorianCalendar().getTimeInMillis()));        			
         		}
         		
         	} else {
@@ -86,8 +91,7 @@ public class FuncionarioDao extends Dao {
             	ListaUsuarios.getInstance().addFunc(f);
             	
             	ps.setString(1, "Entrada");
-            	ps.setNull(3, Types.NULL);
-        	}        	
+        	}     
         	ps.executeUpdate();
         	
             System.out.println("login: " + rs.getString(1) + "  " + rs.getString(2));

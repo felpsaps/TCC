@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/commons-collections-2.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/commons-digester-2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/groovy-all-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/felps/workspace/TCC/libs/jtoaster-1.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
