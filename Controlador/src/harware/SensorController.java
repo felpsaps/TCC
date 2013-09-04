@@ -78,19 +78,21 @@ public class SensorController {
                 		}
                 		VagaBean vg = vagas.get(leds);
                 		Integer valor = new String(buffer,0,len).codePointAt(0);
-                		// GRAVAR NO BD AS MUDANÇAS DE STATUS
+                		// GRAVA NO BD AS MUDANÇAS DE STATUS
                 		//System.out.print(new String(buffer,0,len).codePointAt(0) + " - ");
                 		if (!vg.getDisponibilidade().equals(valor)) {
                 			System.out.println("Atualizando vaga nro " + vg.getNro() + " de: " + vg.getDisponibilidade() + " para: " + valor);
                 			vg.setDisponibilidade(valor);
+
                 			vgDAO.updateDisponibilidade(vg);
+                			vgDAO.insertEstatistica(vagas);
                 			// QUANDO O STATUS FOR 0, OU SEJA, ALGUEM ENTROU NA VAGA
                 			if (valor.equals(VAGA_OCUPADA)) {
                 				ListaUsuarios listaUsr = ListaUsuarios.getInstance();
                 				// VERIFICA SE A VAGA ERA RESERVADA E SE TALVEZ ALGUEM NAO AUTORIZADO TENHA ESTACIONADO NELA
                 				/* A LOGICA AQUI EH A SEGUINTE:
                 				 * QUANDO ALGUEM ENTRA COM O CODIGO DE BARRA, A PESSOA ENTRA EM UMA FILA
-                				 * QUANDO ALGUEM ESTACIONA O SISTEMA ASSUMO QUE QUEM ESTA ESTACIONANDO EH A PROXIMA PESSOA
+                				 * QUANDO ALGUEM ESTACIONA O SISTEMA ASSUME QUE QUEM ESTA ESTACIONANDO EH A PROXIMA PESSOA
                 				 * DA FILA. HA ENTAO UMA MARGEM DE ERRO, JA QUE 2 PESSOAS PODEM ENTRAR E A SEGUNDA PODE ESTACIONAR 
                 				 * ANTES QUE A PRIMEIRA */
                 				if(vg.getUsrReservadoId() != null) {
@@ -100,6 +102,8 @@ public class SensorController {
                 						 * AVISANDO QUE ELE PODE TER PARADO EM VAGA NAO AUTORIZADA
                 						 * TAMBEM EMVIA MENSAGENS PARA OS ADMINISTRADORES*/
                 						System.out.println("Usuario " + func.getNome() + " entrou em vaga nao autorizada");
+                						/* GRAVA REGISTRO DE VAGA NAO AUTORIZADA PARA MOSTRAR MENSAGEM AO ADM*/
+                						vgDAO.vagaNaoAltorizada(func, vg);
                 					}
                 					
                 				}

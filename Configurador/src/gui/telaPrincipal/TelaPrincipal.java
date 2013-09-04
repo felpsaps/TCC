@@ -5,12 +5,17 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.nitido.utils.toaster.Toaster;
 
 import configurador.Funcionario;
+import dao.FuncionarioDao;
 import gui.TelaLogin;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 import javax.swing.*;
 
 import utils.MedidasPadroes;
@@ -21,6 +26,7 @@ public class TelaPrincipal extends JFrame {
     public static Funcionario func;
 
     private JButton btnCadastrar;
+    private JButton btnMsg;
     private JButton btnRelatorios;
     private JButton btnConfiguracoes;
 
@@ -43,6 +49,7 @@ public class TelaPrincipal extends JFrame {
         setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
         new MostraToaster().start();
+        new EstatisticaDiaria().start();
     }
 
     private void init() {
@@ -89,12 +96,13 @@ public class TelaPrincipal extends JFrame {
             painelBotoes = new JPanel();
             painelBotoes.setPreferredSize(new Dimension(200, Toolkit.getDefaultToolkit().getScreenSize().height));
             FormLayout layout = new FormLayout("5dlu, pref",
-                                               "200dlu, pref, 5dlu, pref, 5dlu, pref");
+                                               "200dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref");
             CellConstraints cc = new CellConstraints();
             painelBotoes.setLayout(layout);
             painelBotoes.add(getBtnCadastrar(), cc.xy(2, 2));
-            painelBotoes.add(getBtnRemover(), cc.xy(2, 4));
-            painelBotoes.add(getBtnConfigurar(), cc.xy(2, 6));
+            painelBotoes.add(getBtnMsgs(), cc.xy(2, 4));
+            painelBotoes.add(getBtnRemover(), cc.xy(2, 6));
+            painelBotoes.add(getBtnConfigurar(), cc.xy(2, 8));
             painelBotoes.setBackground(Color.red);
             
             if (func.getTipo() != Funcionario.TIPO_PROPRIETARIO) {
@@ -147,6 +155,23 @@ public class TelaPrincipal extends JFrame {
             return btnCadastrar;
         } else {
             return btnCadastrar;
+        }
+    }
+    
+    public JButton getBtnMsgs() {
+        if (btnMsg == null) {
+        	btnMsg = new JButton("Mensagens(0)");
+        	btnMsg.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    getPainelCardLayout().add(new ConsultarFuncionario(TelaPrincipal.this), "consultar");
+                    cardLayout.show(painelCardLayout, "consultar");                    
+                }
+            });
+            return btnMsg;
+        } else {
+            return btnMsg;
         }
     }
 
@@ -242,6 +267,11 @@ public class TelaPrincipal extends JFrame {
         }
     }
     
+    /**
+     * Mostra um alerta para avisar que há novas mensagens
+     * @author felps
+     *
+     */
     private class MostraToaster extends Thread {
     	public void run() {
     		Toaster t = new Toaster();
@@ -249,10 +279,17 @@ public class TelaPrincipal extends JFrame {
             t.setToasterHeight(100);
             t.setToasterWidth(410);
             t.setStep(2);
+            try {
+				Thread.sleep(1000 * 10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
             while (true) {
         		/* VERIFICA SE HA NOVAS MENSAGENS 
         		 * SE TIVER MOSTRA O TOASTER */
-                t.showToaster(ic, "a");
+            	if (new FuncionarioDao().selectVagaNaoAltorizadaToaster(TelaPrincipal.this)) {
+            		t.showToaster(ic, "a");
+            	}
                 
 	    		try {
 					Thread.sleep(1000 * 60);
@@ -260,6 +297,24 @@ public class TelaPrincipal extends JFrame {
 					e.printStackTrace();
 				}
             }
+    	}
+    }
+    
+    private class EstatisticaDiaria extends Thread {
+    	@Override
+    	public void run() {
+    		Calendar data = new GregorianCalendar().getInstance(new Locale("pt", "BR"));
+    		
+    		while (true) {
+    			if (data.get(Calendar.HOUR_OF_DAY) > 23) {
+    				// TODO gravar registro de estatistica diaria
+    			}
+    			try {
+					Thread.sleep(1000 * 60 * 50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+    		}
     	}
     }
 }

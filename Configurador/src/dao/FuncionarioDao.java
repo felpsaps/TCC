@@ -1,15 +1,15 @@
 package dao;
 
-import configurador.Funcionario;
-import excessoes.FuncionarioDaoException;
-
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import utils.Criptografia;
+import configurador.Funcionario;
+import excessoes.FuncionarioDaoException;
+import gui.telaPrincipal.TelaPrincipal;
 
 /**
  *
@@ -232,6 +232,69 @@ public class FuncionarioDao extends Dao {
         fechaConexao();
         return func;
     }
+    
+    public boolean selectVagaNaoAltorizadaToaster(TelaPrincipal pai) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			sql.append(" SELECT COUNT(*) FROM ");
+			sql.append(" 	estacionamento_nao_autorizado  ");
+			sql.append(" WHERE ena_lida = 'N' ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				pai.getBtnMsgs().setText("Mensagens("+rs.getInt(1)+")");
+			}
+			ps.close();
+			rs.close();
+			
+			sql.setLength(0);
+			sql.append(" SELECT * FROM ");
+			sql.append(" 	estacionamento_nao_autorizado  ");
+			sql.append(" WHERE ena_toaster = 'N' ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			
+			if (rs.next()) {
+				sql.setLength(0);
+				sql.append(" UPDATE ");
+				sql.append(" 	estacionamento_nao_autorizado SET ");
+				sql.append(" 		ena_toaster = 'S' ");
+				sql.append(" WHERE ena_toaster = 'N' ");
+				ps = getCon().prepareStatement(sql.toString());
+				ps.executeUpdate();
+				getCon().commit();
+				
+				return true;
+			}
+			
+			fechaConexao();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
     
     private static String getSenhaCriptografada(String senha) {
         return Criptografia.criptografar(senha);
