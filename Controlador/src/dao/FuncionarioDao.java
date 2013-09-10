@@ -3,13 +3,11 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Types;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
+import principal.Criptografia;
 import principal.FuncionarioBean;
 import principal.ListaUsuarios;
+import principal.ServidorSMTP;
 
 /**
  *
@@ -18,6 +16,51 @@ import principal.ListaUsuarios;
 public class FuncionarioDao extends Dao {
      
     
+	public ServidorSMTP getServidor() throws SQLException {
+        ServidorSMTP servidor = null;
+        String comandoSelect = "select * from servidorsmtp";
+
+        estabeleceConexao();
+        ResultSet rs = comando.executeQuery(comandoSelect);
+         
+        if (rs.next()) {
+            servidor = new ServidorSMTP(rs.getString("nome"), rs.getString("endereco"), 
+                    getSenhaDescriptografada(rs.getString("senha")), rs.getString("porta"), rs.getString("email"));
+        }
+        fechaConexao();
+        return servidor;
+    }
+	
+	public FuncionarioBean buscarPorCodigo(String cod) throws SQLException {
+		FuncionarioBean f = null;
+		StringBuilder sql = new StringBuilder();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		estabeleceConexao();
+		
+		sql.append(" SELECT * from funcionario where usr_codigo = ?");
+		ps = getCon().prepareStatement(sql.toString());
+		ps.setString(1, cod);
+		
+		rs = ps.executeQuery();
+		
+		if (rs.next()) {
+			f = new FuncionarioBean(rs.getString("usr_codigo"), rs.getString("usr_nome"), 
+							rs.getString("usr_email"), rs.getString("usr_celular"), rs.getInt("usr_tipo"));
+		}	
+		
+		if (ps != null) {
+			ps.close();
+		}
+		if (rs != null) {
+			rs.close();
+		}
+        fechaConexao();
+        
+        return f;
+	}
+	
     public void selectLoginESenha(String login) throws SQLException
     {
         String comandoSelect = String.format("select* from funcionario where usr_codigo='%s'",
@@ -100,6 +143,10 @@ public class FuncionarioDao extends Dao {
             System.out.println("Funcionário não encontrado");
         }
         fechaConexao();      
+    }
+    
+    private static String getSenhaDescriptografada(String senha) {
+        return Criptografia.descriptografar(senha);
     }
     
 }

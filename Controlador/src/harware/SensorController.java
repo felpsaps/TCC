@@ -10,14 +10,19 @@ import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.List;
 
+import dao.FuncionarioDao;
 import dao.VagaDAO;
 
+import principal.Email;
 import principal.FuncionarioBean;
 import principal.ListaUsuarios;
+import principal.ServidorSMTP;
 import principal.VagaBean;
+import smsSender.SMSSender;
 
 public class SensorController {
 
@@ -101,7 +106,28 @@ public class SensorController {
                 						/* TODO ENVIA EMAIL E SMS AO FUNCIONARIO
                 						 * AVISANDO QUE ELE PODE TER PARADO EM VAGA NAO AUTORIZADA
                 						 * TAMBEM EMVIA MENSAGENS PARA OS ADMINISTRADORES*/
+                						FuncionarioBean funcAut = null;
+                						try {
+                							funcAut = new FuncionarioDao().buscarPorCodigo(vg.getUsrReservadoId());
+                						} catch (SQLException ex) {
+                							ex.printStackTrace();
+                						}
                 						System.out.println("Usuario " + func.getNome() + " entrou em vaga nao autorizada");
+                						SMSSender sms =  new SMSSender();
+                						String smsStr = "Atencao! Se voce estacionou na vaga "+vg.getNro()+" e voce nao e "+funcAut.getNome()+", por favor retire seu veiculo!";
+                						sms.sendSms(func.getCelular(), smsStr);
+                						
+                						ServidorSMTP smtp = null;
+										try {
+											smtp = new FuncionarioDao().getServidor();
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}
+                						Email mail = new Email(smtp.getEnderecoServidor(), smtp.getPorta(), smtp.getEmail(), smtp.getSenha());
+                						String mailStr = "Caro " + func.getNome() +".\n\nA vaga " + vg.getNro() + " está reservada.\n" +
+                										 "Se você estacionou nela e você não é "+funcAut.getNome()+" por favor retire seu veículo, caso contrário favor desconsiderar esta mensagem. \n\n Obrigado.";
+                						mail.sendMail(func.getEmail(), "Vaga Não Autorizada!", mailStr);
+                						
                 						/* GRAVA REGISTRO DE VAGA NAO AUTORIZADA PARA MOSTRAR MENSAGEM AO ADM*/
                 						vgDAO.vagaNaoAltorizada(func, vg);
                 					}
