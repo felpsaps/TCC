@@ -103,7 +103,7 @@ public class SensorController {
                 				if(vg.getUsrReservadoId() != null) {
                 					FuncionarioBean func = listaUsr.getPrimeiroFunc();
                 					if (func != null && !func.getCodigo().equals(vg.getUsrReservadoId())) {
-                						/* TODO ENVIA EMAIL E SMS AO FUNCIONARIO
+                						/* ENVIA EMAIL E SMS AO FUNCIONARIO
                 						 * AVISANDO QUE ELE PODE TER PARADO EM VAGA NAO AUTORIZADA
                 						 * TAMBEM EMVIA MENSAGENS PARA OS ADMINISTRADORES*/
                 						FuncionarioBean funcAut = null;
