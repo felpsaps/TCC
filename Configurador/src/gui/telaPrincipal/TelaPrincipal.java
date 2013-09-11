@@ -41,6 +41,8 @@ public class TelaPrincipal extends JFrame {
     private JMenu arquivoItem;
     
     private static CardLayout cardLayout = null;
+    
+    private boolean continuaToaster;
 
     public TelaPrincipal(Funcionario f) {
         func = f;
@@ -48,6 +50,7 @@ public class TelaPrincipal extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
+        continuaToaster = true;
         new MostraToaster().start();
         new EstatisticaDiaria().start();
     }
@@ -219,6 +222,7 @@ public class TelaPrincipal extends JFrame {
                     if (resp == JOptionPane.YES_OPTION) {
                         TelaPrincipal.this.dispose();
                         func = null;
+                        continuaToaster = false;
                         new TelaLogin();
                     } else {
                         return;
@@ -280,11 +284,11 @@ public class TelaPrincipal extends JFrame {
             t.setToasterWidth(410);
             t.setStep(2);
             try {
-				Thread.sleep(1000 * 10);
+				Thread.sleep(1000 * 3);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-            while (true) {
+            while (continuaToaster) {
         		/* VERIFICA SE HA NOVAS MENSAGENS 
         		 * SE TIVER MOSTRA O TOASTER */
             	if (new FuncionarioDao().selectVagaNaoAltorizadaToaster(TelaPrincipal.this)) {

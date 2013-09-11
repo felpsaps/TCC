@@ -8,6 +8,7 @@ import java.util.List;
 
 import utils.Criptografia;
 import configurador.Funcionario;
+import configurador.MensagemBean;
 import excessoes.FuncionarioDaoException;
 import gui.telaPrincipal.TelaPrincipal;
 
@@ -294,6 +295,57 @@ public class FuncionarioDao extends Dao {
 			}
 		}
 		return false;
+	}
+    
+    public List<MensagemBean> getMensagens() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<MensagemBean> msg = new ArrayList<MensagemBean>();
+		FuncionarioDao fDao = new FuncionarioDao();
+		try {
+
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			sql.append(" SELECT estacionamento_nao_autorizado.*, to_char(ena_data, 'dd/MM/yyyy - hh24:MI:ss') as data FROM ");
+			sql.append(" 	estacionamento_nao_autorizado  ");
+			sql.append(" WHERE ena_excluida = 'N' ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				MensagemBean m = new MensagemBean();
+				m.setData(rs.getString("data"));
+				m.setId(rs.getInt("ena_id"));
+				m.setLida(rs.getString("ena_lida"));
+				m.setUsrEstacionado(fDao.selectPorCodigo(rs.getString("ena_usr_estacionado")));
+				m.setUsrReservado(fDao.selectPorCodigo(rs.getString("ena_usr_reservada")));
+				m.setVaga(rs.getInt("ena_vaga"));
+				msg.add(m);
+			}
+			ps.close();
+			rs.close();
+									
+			fechaConexao();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return msg;
 	}
     
     private static String getSenhaCriptografada(String senha) {
