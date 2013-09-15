@@ -1,1 +1,10 @@
-1-S;0-S;0-N;1-N;1-S
+<%@page import="dao.VagasDao"%>
+<%@page import="bean.Vaga"%>
+<%
+	for (Vaga v : new VagasDao().selectVagas()) {
+		out.print(v.getDisponibilidade() + "-" + (v.getReservadaPara() == null ? "N" : "S"));
+		if (v.getNumero() != 8) {
+			out.print(";");
+		}
+	}
+%>

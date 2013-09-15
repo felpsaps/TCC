@@ -35,7 +35,7 @@
 	
 	function atualizaPainel() {
 		$.post("jsp/atualizar_monitor.jsp", function(data) {
-			var vagas = data.split(';');
+			var vagas = data.trim().split(';');
 			var j = 1;
 			for (var i = 0; i < vagas.length; i++) {
 				var vaga = vagas[i].split("-");
