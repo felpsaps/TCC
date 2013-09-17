@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import GUI.TelaPrincipal;
+
 import principal.Criptografia;
 import principal.FuncionarioBean;
 import principal.ListaUsuarios;
@@ -61,8 +63,9 @@ public class FuncionarioDao extends Dao {
         return f;
 	}
 	
-    public void selectLoginESenha(String login) throws SQLException
+    public void selectLoginESenha(String login, TelaPrincipal pai) throws SQLException
     {
+    	    	
         String comandoSelect = String.format("select* from funcionario where usr_codigo='%s'",
                                               login);
 
@@ -123,8 +126,16 @@ public class FuncionarioDao extends Dao {
                 	ListaUsuarios.getInstance().addFunc(f);
                 	
                 	ps.setString(2, "Entrada");
+                	
+                	pai.lbl.setText("Bem vindo " + f.getNome() + "!");
         		} else {
                 	ps.setString(2, "Saída");
+                	/* VERIFICA SE QUEM ESTA SAINDO AINDA ESTA NA LISTA DE FUNCIONARIOS 
+                	 * NAO ESTACIONADOS. SE ESTIVER REMOVE*/
+                	if (ListaUsuarios.getInstance().getLista().contains(f)) {
+                		ListaUsuarios.getInstance().getLista().remove(f);
+                	}
+                	pai.lbl.setText("Volte Sempre!");
         		}
         		
         	} else {
@@ -133,7 +144,25 @@ public class FuncionarioDao extends Dao {
         		/* ADICIONA O FUNCIONARIO NA LISTA DE FUNCIONARIO QUE AINDA NAO ESTACIONARAM */
             	ListaUsuarios.getInstance().addFunc(f);
             	
-            	ps.setString(1, "Entrada");
+            	// ADICIONAR REGISTRO DE ENTRADA OU SAIDA
+            	sql.setLength(0);
+            	sql.append(" INSERT INTO \n")
+         	   	   .append(" 	registro ( \n")
+         	   	   .append("		reg_usr_cod, \n")
+         	   	   .append("		reg_tipo, \n")
+         	   	   .append("		reg_data \n");
+         	   	sql.append(" 	) \n")
+         	   	   .append(" VALUES ( \n")
+         	   	   .append(" 	?, \n")
+         	   	   .append(" 	?, \n")
+         	   	   .append(" 	now() \n");
+      	   	   	sql.append(" 	) \n");        	
+
+            	ps = getCon().prepareStatement(sql.toString());
+            	ps.setString(1, f.getCodigo());
+            	
+            	ps.setString(2, "Entrada");
+            	pai.lbl.setText("Bem vindo " + f.getNome() + "!");
         	}     
         	ps.executeUpdate();
         	
@@ -141,7 +170,10 @@ public class FuncionarioDao extends Dao {
             System.out.println("Autenticação realizada");
         } else {
             System.out.println("Funcionário não encontrado");
+        	pai.lbl.setText("Funcionário não encontrado!");
         }
+        pai.lbl.repaint();
+        pai.lbl.repaint(100);
         fechaConexao();      
     }
     

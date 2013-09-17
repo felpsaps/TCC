@@ -5,6 +5,8 @@
 package GUI;
 
 import dao.FuncionarioDao;
+
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
@@ -13,6 +15,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 /**
@@ -21,36 +24,53 @@ import javax.swing.JTextField;
  */
 public class TelaPrincipal extends JFrame{
     
+	public final JLabel lbl = new JLabel();
+    final JTextField txt = new JTextField();
+	
     public TelaPrincipal() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(200, 200);
+        setExtendedState(MAXIMIZED_BOTH);
         init();
         setVisible(true);
     }
     
     public void init() {
-        final JTextField txt = new JTextField();
         txt.requestFocus();
-        txt.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == 10) {
-                    try {
-                        new FuncionarioDao().selectLoginESenha(txt.getText());
-                        Thread.sleep(5000);
-                        txt.setText("");
-                        txt.requestFocus();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
+        txt.addKeyListener(new Controle());
+        txt.setPreferredSize(new Dimension(0, 0));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 0, 300));
+        add(lbl);
+        add(txt);
+    }
+    
+    private class Controle extends KeyAdapter {
+    	@Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == 10) {
+                try {
+                    new FuncionarioDao().selectLoginESenha(txt.getText(), TelaPrincipal.this);
+                    Thread t = new Thread(new Runnable() {
+            			
+            			@Override
+            			public void run() {				
+            				try {
+            		            txt.setText("");
+            		            txt.requestFocus();
+            		    		Thread.sleep(5000);
+                                lbl.setText("");
+            	    		} catch (InterruptedException ex) {
+            	    			
+            	    		}
+            			}
+            		});
+                    t.start();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
             }
-        });
-        txt.setPreferredSize(new Dimension(0, 0));
-        setLayout(new FlowLayout());
-        add(txt);
+        }
+    	
+    	
     }
     
 }
