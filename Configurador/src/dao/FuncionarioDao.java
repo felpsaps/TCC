@@ -244,7 +244,7 @@ public class FuncionarioDao extends Dao {
 			
 			sql.append(" SELECT COUNT(*) FROM ");
 			sql.append(" 	estacionamento_nao_autorizado  ");
-			sql.append(" WHERE ena_lida = 'N' ");
+			sql.append(" WHERE ena_lida = 'N' AND ena_excluida = 'N' ");
 			
 			ps = getCon().prepareStatement(sql.toString());
 			rs = ps.executeQuery();
@@ -297,6 +297,70 @@ public class FuncionarioDao extends Dao {
 		return false;
 	}
     
+    public void lerMensagem(MensagemBean msg, TelaPrincipal pai) {
+		PreparedStatement ps = null;
+		try {
+
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			sql.append(" UPDATE estacionamento_nao_autorizado SET ena_lida = 'S' ");
+			sql.append(" WHERE ena_id = ? ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			ps.setInt(1, msg.getId());
+			ps.executeUpdate();
+			
+			ps.close();
+			getCon().commit();
+									
+			fechaConexao();
+			selectVagaNaoAltorizadaToaster(pai);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+    
+    public void excluirMensagem(MensagemBean msg, TelaPrincipal pai) {
+		PreparedStatement ps = null;
+		try {
+
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			sql.append(" UPDATE estacionamento_nao_autorizado SET ena_excluida = 'S' ");
+			sql.append(" WHERE ena_id = ? ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			ps.setInt(1, msg.getId());
+			ps.executeUpdate();
+			
+			ps.close();
+			getCon().commit();
+									
+			fechaConexao();
+			selectVagaNaoAltorizadaToaster(pai);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+    
     public List<MensagemBean> getMensagens() {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -309,7 +373,7 @@ public class FuncionarioDao extends Dao {
 			
 			sql.append(" SELECT estacionamento_nao_autorizado.*, to_char(ena_data, 'dd/MM/yyyy - hh24:MI:ss') as data FROM ");
 			sql.append(" 	estacionamento_nao_autorizado  ");
-			sql.append(" WHERE ena_excluida = 'N' ");
+			sql.append(" WHERE ena_excluida = 'N' ORDER BY ena_data DESC ");
 			
 			ps = getCon().prepareStatement(sql.toString());
 			rs = ps.executeQuery();

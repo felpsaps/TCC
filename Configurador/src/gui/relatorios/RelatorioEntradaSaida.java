@@ -62,7 +62,6 @@ public class RelatorioEntradaSaida extends JPanel{
 						
 						Dao d = new Dao();
 						String path = getClass().getResource("/jasper/estacionamento.jasper").getPath();
-						System.out.println(path);
 						JasperPrint relatorio = JasperFillManager.fillReport(getClass().getResource("/jasper/estacionamento.jasper").getPath(), 
 						        parametros, d.getCon());
 						

@@ -168,8 +168,8 @@ public class TelaPrincipal extends JFrame {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    getPainelCardLayout().add(new ConsultarFuncionario(TelaPrincipal.this), "consultar");
-                    cardLayout.show(painelCardLayout, "consultar");                    
+                    getPainelCardLayout().add(new PainelMensagens(TelaPrincipal.this), "mensagem");
+                    cardLayout.show(painelCardLayout, "mensagem");                    
                 }
             });
             return btnMsg;
@@ -284,7 +284,7 @@ public class TelaPrincipal extends JFrame {
             t.setToasterWidth(410);
             t.setStep(2);
             try {
-				Thread.sleep(1000 * 3);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -10,7 +10,18 @@ public class MensagemBean {
 	private Funcionario usrReservado;
 	private Funcionario usrEstacionado;
 	private String data;
+	private boolean checado = false;
 	
+	public void setChecado() {
+		if (checado) {
+			checado = false;
+			return;
+		}
+		checado = true;
+	}
+	public boolean getChecado() {
+		return checado;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -58,6 +69,14 @@ public class MensagemBean {
 	}
 	public void setData(String data) {
 		this.data = data;
-	}	
+	}
+	
+	@Override
+	public boolean equals(Object msg) {
+		if (((MensagemBean)msg).getId().equals(getId())) {
+			return true;
+		}
+		return false;
+	}
 
 }
