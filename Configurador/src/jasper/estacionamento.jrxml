@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="estacionamento" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3e190666-5024-4ee3-814d-0413bacc58ad">
 	<property name="ireport.zoom" value="3.0"/>
-	<property name="ireport.x" value="1179"/>
+	<property name="ireport.x" value="610"/>
 	<property name="ireport.y" value="589"/>
 	<subDataset name="dataset1" uuid="75e6dbe9-be1a-4985-a02d-b826f9744845"/>
+	<parameter name="SQL" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select usr_nome, reg_tipo, reg_data, reg_usr_cod, reg_permanencia,
-	to_char((select sum(reg_permanencia) as perm from registro r2 where r1.reg_usr_cod = r2.reg_usr_cod), 'dd') || ' Dias | ' ||
-	to_char((select sum(reg_permanencia) as perm from registro r2 where r1.reg_usr_cod = r2.reg_usr_cod), 'hh24 Horas | ') ||
-	to_char((select sum(reg_permanencia) as perm from registro r2 where r1.reg_usr_cod = r2.reg_usr_cod), 'MI') || ' Minutos | ' ||
-	to_char((select sum(reg_permanencia) as perm from registro r2 where r1.reg_usr_cod = r2.reg_usr_cod), 'ss') || ' Segundos'
-from registro r1, funcionario
-where usr_codigo = reg_usr_cod
-order by lower(usr_nome), reg_data]]>
+		<![CDATA[$P!{SQL}]]>
 	</queryString>
 	<field name="usr_nome" class="java.lang.String"/>
 	<field name="reg_tipo" class="java.lang.String"/>

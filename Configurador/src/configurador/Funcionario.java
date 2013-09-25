@@ -86,4 +86,9 @@ public class Funcionario {
     public void setTipo(int type) {
         tipo = type;
     }
+    
+    @Override
+    public String toString() {
+    	return getNome();
+    }
 }
