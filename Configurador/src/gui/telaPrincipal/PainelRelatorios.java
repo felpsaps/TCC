@@ -2,6 +2,8 @@ package gui.telaPrincipal;
 
 import gui.componentes.Link;
 import gui.relatorios.RelatorioEntradaSaida;
+import gui.relatorios.RelatorioPrevisaoUtilizacaoTotal;
+import gui.relatorios.RelatorioUtilizacaoData;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,7 +27,7 @@ public class PainelRelatorios extends JPanel{
 	
 	private void init() {
         FormLayout layout = new FormLayout("30dlu, pref",
-                                           "80dlu, pref, 3dlu, pref, 3dlu, pref");
+                                           "80dlu, pref, 10dlu, pref, 10dlu, pref");
         CellConstraints cc = new CellConstraints();
         setLayout(layout);
         setBackground(MedidasPadroes.COR_DE_FUNDO);
@@ -40,7 +42,30 @@ public class PainelRelatorios extends JPanel{
         	}
 		});
         
+        Link relUtilizacaoData = new Link("- Previsão de Utilização em Data Específica");
+        relUtilizacaoData.getLink().addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		pai.setPainel(PainelRelatorios.this, 
+                        new RelatorioUtilizacaoData(pai), 
+                        "previsaoData");
+        	}
+		});
+        
+        Link relUtilizacaoTotal = new Link("- Previsão de Utilização Total");
+        relUtilizacaoTotal.getLink().addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		pai.setPainel(PainelRelatorios.this, 
+                        new RelatorioPrevisaoUtilizacaoTotal(pai), 
+                        "previsaoTotal");
+        	}
+		});
+        
+        
         add(relEntradaSaida, cc.xy(2, 2));
+        add(relUtilizacaoData, cc.xy(2, 4));
+        add(relUtilizacaoTotal, cc.xy(2, 6));
     }
 
 }

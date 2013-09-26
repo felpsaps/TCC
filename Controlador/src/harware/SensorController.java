@@ -90,7 +90,6 @@ public class SensorController {
                 			vg.setDisponibilidade(valor);
 
                 			vgDAO.updateDisponibilidade(vg);
-                			vgDAO.insertEstatistica(vagas);
                 			// QUANDO O STATUS FOR 0, OU SEJA, ALGUEM ENTROU NA VAGA
                 			if (valor.equals(VAGA_OCUPADA)) {
                 				ListaUsuarios listaUsr = ListaUsuarios.getInstance();

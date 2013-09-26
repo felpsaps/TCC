@@ -6,6 +6,7 @@ import com.nitido.utils.toaster.Toaster;
 
 import configurador.Funcionario;
 import dao.FuncionarioDao;
+import dao.VagasDao;
 import gui.TelaLogin;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,9 +15,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Locale;
 
 import javax.swing.*;
+
+import net.sourceforge.openforecast.DataPoint;
+import net.sourceforge.openforecast.DataSet;
+import net.sourceforge.openforecast.Forecaster;
+import net.sourceforge.openforecast.ForecastingModel;
+import net.sourceforge.openforecast.Observation;
 
 import utils.MedidasPadroes;
 
@@ -52,12 +60,34 @@ public class TelaPrincipal extends JFrame {
         setVisible(true);
         continuaToaster = true;
         new MostraToaster().start();
-        new EstatisticaDiaria().start();
     }
+    
+    
 
     private void init() {
         menuBar = new JMenuBar();
         arquivoItem = new JMenu("Arquivo");
+        JMenuItem conf = new JMenuItem("Configurar Conta");
+        JMenuItem sair = new JMenuItem("Sair");
+        sair.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] op = {"Sim", "Não"};
+                int resp = JOptionPane.showOptionDialog(TelaPrincipal.this, "Deseja mesmo sair?", "Atenção!",
+                        JOptionPane.INFORMATION_MESSAGE,JOptionPane.YES_NO_OPTION, null, op, op[1]);
+                if (resp == JOptionPane.YES_OPTION) {
+                    TelaPrincipal.this.dispose();
+                    func = null;
+                    continuaToaster = false;
+                    new TelaLogin();
+                } else {
+                    return;
+                }
+			}
+		});
+        arquivoItem.add(conf);
+        arquivoItem.add(sair);
         menuBar.add(arquivoItem);
         setJMenuBar(menuBar);
         FormLayout layout = new FormLayout("pref, pref, pref",
@@ -304,21 +334,5 @@ public class TelaPrincipal extends JFrame {
     	}
     }
     
-    private class EstatisticaDiaria extends Thread {
-    	@Override
-    	public void run() {
-    		Calendar data = new GregorianCalendar().getInstance(new Locale("pt", "BR"));
-    		
-    		while (true) {
-    			if (data.get(Calendar.HOUR_OF_DAY) > 23) {
-    				// TODO gravar registro de estatistica diaria
-    			}
-    			try {
-					Thread.sleep(1000 * 60 * 50);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-    		}
-    	}
-    }
+    
 }

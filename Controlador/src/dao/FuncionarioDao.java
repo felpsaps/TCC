@@ -136,6 +136,8 @@ public class FuncionarioDao extends Dao {
                 		ListaUsuarios.getInstance().getLista().remove(f);
                 	}
                 	pai.lbl.setText("Volte Sempre!");
+
+        			new VagaDAO().insertEstatistica(new VagaDAO().selectVagas());
         		}
         		
         	} else {

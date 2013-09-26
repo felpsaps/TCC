@@ -85,6 +85,7 @@ public class VagaDAO extends Dao{
 
 	/**
 	 * Grava a porcentagem total usada do estacionamento no momento
+	 * Sempre quando algum funcionario sai do estacionamento
 	 * @param lista
 	 */
 	public void insertEstatistica(List<VagaBean> lista) {
@@ -123,6 +124,76 @@ public class VagaDAO extends Dao{
 			if (ps != null) {
 				try {
 					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void insertEstatisticaDiaria() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			/* PRIMEIRO DELETA OS REGISTROS DO DIA 
+			 * POIS O IDEAL EH QUE ESTA TABELA TENHA 1 REGISTRO POR DIA */
+			sql.append(" DELETE FROM ");
+			sql.append(" 	estatistica_diaria  ");
+			sql.append(" WHERE  ");
+			sql.append(" 	to_char(estd_data, 'dd/MM/yyyy') = to_char(now(), 'dd/MM/yyyy') ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			ps.executeUpdate();
+			ps.close();
+			
+			// PEGA AS INFORMACOES DAS ESTATISTICAS AO LONGO DO DIA
+			sql.setLength(0);
+			sql.append(" SELECT * ");
+			sql.append(" FROM estatistica  ");
+			sql.append(" WHERE  ");
+			sql.append(" 	to_char(est_data, 'dd/MM/yyyy') = to_char(now(), 'dd/MM/yyyy') ");
+
+			ps = getCon().prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			int nroRegistros = 0;
+			BigDecimal pct = new BigDecimal(0);
+			while (rs.next()) {
+				nroRegistros++;
+				pct = pct.add(rs.getBigDecimal("est_pct"));
+			}
+			ps.close();
+			rs.close();
+			
+			// INSERE NA TABELA A MEDIA DE PORCENTAGEM DE USO NO DIA
+			sql.setLength(0);
+			sql.append(" INSERT INTO  ");
+			sql.append(" estatistica_diaria (estd_data, estd_pct)  ");
+			sql.append(" VALUES  ");
+			sql.append(" 	(now(), ?) ");
+			ps = getCon().prepareStatement(sql.toString());
+			ps.setBigDecimal(1, pct.divide(new BigDecimal(nroRegistros)));
+			ps.executeUpdate();
+			ps.close();			
+			
+			
+			fechaConexao();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

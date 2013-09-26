@@ -4,19 +4,21 @@
  */
 package GUI;
 
-import dao.FuncionarioDao;
-
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import dao.FuncionarioDao;
+import dao.VagaDAO;
 
 /**
  *
@@ -32,6 +34,7 @@ public class TelaPrincipal extends JFrame{
         setExtendedState(MAXIMIZED_BOTH);
         init();
         setVisible(true);
+        new EstatisticaDiaria().start();
     }
     
     public void init() {
@@ -59,7 +62,7 @@ public class TelaPrincipal extends JFrame{
             		    		Thread.sleep(5000);
                                 lbl.setText("");
             	    		} catch (InterruptedException ex) {
-            	    			
+            	    			ex.printStackTrace();
             	    		}
             			}
             		});
@@ -68,9 +71,26 @@ public class TelaPrincipal extends JFrame{
                     ex.printStackTrace();
                 }
             }
-        }
-    	
-    	
+        }    	
+    }
+    
+    private class EstatisticaDiaria extends Thread {
+    	@Override
+    	public void run() {
+    		//Calendar data = new GregorianCalendar().getInstance(new Locale("pt", "BR"));
+    		
+    		while (true) {
+    			//if (data.get(Calendar.HOUR_OF_DAY) > 23) {
+    				new VagaDAO().insertEstatisticaDiaria();
+    				
+    			//}
+    			try {
+					Thread.sleep(1000 * 60 * 60);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+    		}
+    	}
     }
     
 }
