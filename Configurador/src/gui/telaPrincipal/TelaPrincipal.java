@@ -68,6 +68,14 @@ public class TelaPrincipal extends JFrame {
         menuBar = new JMenuBar();
         arquivoItem = new JMenu("Arquivo");
         JMenuItem conf = new JMenuItem("Configurar Conta");
+		conf.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+	                	getPainelCardLayout().add(new PainelConfiguracaoConta(TelaPrincipal.this), "confConta");
+	                    cardLayout.show(painelCardLayout, "confConta"); 
+					}
+				});
         JMenuItem sair = new JMenuItem("Sair");
         sair.addActionListener(new ActionListener() {
 			
@@ -283,7 +291,7 @@ public class TelaPrincipal extends JFrame {
             lblConfigurarConta.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
             lblConfigurarConta.setForeground(Color.LIGHT_GRAY);
             lblConfigurarConta.addMouseListener(new MouseAdapter() {
-            @Override
+            	@Override
                 public void mouseEntered(MouseEvent e) {
                     lblConfigurarConta.setCursor(new Cursor(Cursor.HAND_CURSOR));
                     lblConfigurarConta.setForeground(Color.red);
@@ -293,6 +301,12 @@ public class TelaPrincipal extends JFrame {
                 public void mouseExited(MouseEvent e) {
                     lblConfigurarConta.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     lblConfigurarConta.setForeground(Color.LIGHT_GRAY);
+                }
+                
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                	getPainelCardLayout().add(new PainelConfiguracaoConta(TelaPrincipal.this), "confConta");
+                    cardLayout.show(painelCardLayout, "confConta"); 
                 }
             });
             return lblConfigurarConta;

@@ -120,6 +120,28 @@ public class FuncionarioDao extends Dao {
         }
     }
     
+    public static void atualizaConta(Funcionario func)
+    {
+        try{
+            String comandoAtualiza;
+
+            comandoAtualiza = String.format("UPDATE funcionario SET usr_nome='%s', "
+                    + "usr_email='%s', usr_celular='%s', usr_tipo='%d', usr_login='%s', "
+                    + "usr_senha='%s' WHERE usr_codigo = '%s'",
+                    func.getNome(), func.getEmail(), func.getCelular(), func.getTipo(), 
+                    func.getLogin(), getSenhaCriptografada(func.getSenha()), 
+                    func.getCodigo());
+
+
+            estabeleceConexao();
+            comando.executeUpdate(comandoAtualiza);
+            getCon().commit();
+            fechaConexao();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     public static Funcionario selectPorCodigo(String cod)  {
          try {
              Funcionario func = null;
@@ -215,7 +237,9 @@ public class FuncionarioDao extends Dao {
         Funcionario func;
         String comandoSelect = String.format("select * from funcionario where usr_login='%s'",
                                               getSenhaCriptografada(login));
+        
 
+        System.out.println(comandoSelect);
         estabeleceConexao();
         ResultSet rs = comando.executeQuery(comandoSelect);
         if (rs.next()) {

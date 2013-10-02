@@ -128,7 +128,7 @@ public class SensorController {
                 						mail.sendMail(func.getEmail(), "Vaga Não Autorizada!", mailStr);
                 						
                 						/* GRAVA REGISTRO DE VAGA NAO AUTORIZADA PARA MOSTRAR MENSAGEM AO ADM*/
-                						vgDAO.vagaNaoAltorizada(func, vg);
+                						vgDAO.vagaNaoAutorizada(func, vg);
                 					}
                 					
                 				}

@@ -45,7 +45,7 @@ public class VagaDAO extends Dao{
 	 * @param f
 	 * @param vg
 	 */
-	public void vagaNaoAltorizada(FuncionarioBean f, VagaBean vg) {
+	public void vagaNaoAutorizada(FuncionarioBean f, VagaBean vg) {
 		PreparedStatement ps = null;
 		try {
 
@@ -56,7 +56,7 @@ public class VagaDAO extends Dao{
 			sql.append(" 	estacionamento_nao_autorizado ( ");
 			sql.append(" 		ena_vaga, ");
 			sql.append(" 		ena_usr_reservada, ");
-			sql.append(" 		ena_usr_estacionado ");
+			sql.append(" 		ena_usr_estacionado, ");
 			sql.append(" 		ena_data )");
 			sql.append(" 	VALUES ( ");
 			sql.append(" 		?, ?, ?, now()) ");
@@ -175,7 +175,11 @@ public class VagaDAO extends Dao{
 			sql.append(" VALUES  ");
 			sql.append(" 	(now(), ?) ");
 			ps = getCon().prepareStatement(sql.toString());
-			ps.setBigDecimal(1, pct.divide(new BigDecimal(nroRegistros)));
+			if (nroRegistros > 0) {
+				ps.setBigDecimal(1, pct.divide(new BigDecimal(nroRegistros)));
+			} else {
+				ps.setInt(1, 0);
+			}
 			ps.executeUpdate();
 			ps.close();			
 			
