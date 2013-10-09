@@ -239,7 +239,6 @@ public class FuncionarioDao extends Dao {
                                               getSenhaCriptografada(login));
         
 
-        System.out.println(comandoSelect);
         estabeleceConexao();
         ResultSet rs = comando.executeQuery(comandoSelect);
         if (rs.next()) {

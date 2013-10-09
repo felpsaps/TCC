@@ -51,7 +51,7 @@ public class PainelMensagens extends JPanel {
         setLayout(layout);
         setBackground(MedidasPadroes.COR_DE_FUNDO);
         JScrollPane scroll = new JScrollPane(getTabelaMensagens());
-        scroll.setPreferredSize(new Dimension(1000, 300));
+        scroll.setPreferredSize(new Dimension(720, 300));
         JPanel pnel = new JPanel(new BorderLayout());
         pnel.setBackground(MedidasPadroes.COR_DE_FUNDO);        
         pnel.add(getBtnExcluir(), BorderLayout.WEST);

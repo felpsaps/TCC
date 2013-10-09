@@ -69,7 +69,7 @@ public class ConsultarFuncionario extends JPanel{
         setLayout(layout);
         setBackground(MedidasPadroes.COR_DE_FUNDO);
         JScrollPane scroll = new JScrollPane(getTabelaFuncionarios());
-        scroll.setPreferredSize(new Dimension(1000, 300));
+        scroll.setPreferredSize(new Dimension(720, 300));
         
         
         add(getPainelBusca(), cc.xy(2, 2));
@@ -78,7 +78,7 @@ public class ConsultarFuncionario extends JPanel{
     }
     
     private JPanel getPainelBtns() {
-        FormLayout layout = new FormLayout("400dlu, pref, 3dlu, pref, 3dlu, pref, 3dlu, pref",
+        FormLayout layout = new FormLayout("265dlu, pref, 3dlu, pref, 3dlu, pref, 3dlu, pref",
                                            "pref");
         CellConstraints cc = new CellConstraints();
         PanelBuilder builder = new PanelBuilder(layout);

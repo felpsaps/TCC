@@ -176,6 +176,7 @@ public class TelaPrincipal extends JFrame {
     private JButton getBtnConfigurar() {
         if (btnConfiguracoes == null) {
             btnConfiguracoes = new JButton("Configurar Sistema");
+            btnConfiguracoes.setVisible(false);
             return btnConfiguracoes;
         } else {
             return btnConfiguracoes;
