@@ -31,8 +31,8 @@ public class Dao {
      */
     protected static void estabeleceConexao() throws SQLException
     {
+    	Banco.con = null;
         conexao = Banco.connect();
-        comando = conexao.createStatement();
     }
     
     public static Connection getCon() {
@@ -45,6 +45,7 @@ public class Dao {
     	}
     	return conexao;
     }
+    
 
     /**
      * Fecha uma conexão e o statement cm o banco de dados
@@ -55,6 +56,9 @@ public class Dao {
     {
     	if (comando != null) {
     		comando.close();
+    	}
+    	if (conexao != null) {
+    		conexao.close();
     	}
     }
 

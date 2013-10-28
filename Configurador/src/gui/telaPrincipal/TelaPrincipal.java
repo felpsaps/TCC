@@ -148,6 +148,7 @@ public class TelaPrincipal extends JFrame {
             
             if (func.getTipo() != Funcionario.TIPO_PROPRIETARIO) {
             	getBtnRemover().setVisible(false);
+            	getBtnConfigurar().setVisible(false);
             }
             
             return painelBotoes;
@@ -176,7 +177,7 @@ public class TelaPrincipal extends JFrame {
     private JButton getBtnConfigurar() {
         if (btnConfiguracoes == null) {
             btnConfiguracoes = new JButton("Configurar Sistema");
-            btnConfiguracoes.setVisible(false);
+            //btnConfiguracoes.setVisible(false);
             return btnConfiguracoes;
         } else {
             return btnConfiguracoes;

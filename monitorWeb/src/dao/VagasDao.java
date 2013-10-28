@@ -20,13 +20,15 @@ public class VagasDao extends Dao{
              String comandoSelect = String.format("select * from vaga order by vg_numero");
 
              estabeleceConexao();
-             ResultSet rs = comando.executeQuery(comandoSelect);
+             PreparedStatement ps = getCon().prepareStatement(comandoSelect);
+             ResultSet rs = ps.executeQuery();
 
              while (rs.next()) {
                  vagas.add(new Vaga(rs.getInt("vg_id"), rs.getInt("vg_numero"),
                 		 			rs.getString("vg_reserva_usr"), rs.getInt("vg_disp")));
              }
              fechaConexao();
+             rs.close();
              return vagas;
          } catch (SQLException ex) {
              ex.printStackTrace();
@@ -35,55 +37,32 @@ public class VagasDao extends Dao{
         
     }
     
-    public static void reservaVaga(int vgNum, String codigo) {
-    	try {
-    		StringBuilder sql = new StringBuilder();
-    		PreparedStatement ps = null;
-    		estabeleceConexao();
-    		sql.append(" UPDATE\n")
-    		   .append(" 	vaga SET ")
-    		   .append(" 		vg_reserva_usr = ? ")
-    		   .append(" WHERE ")
-    		   .append(" 	vg_numero = ? ");
+    public static Integer selectVagaByCod(String cod) {
+        try {
+             String comandoSelect = String.format("select * from usuario_estacionado where usr_codigo = '" + cod + "'");
 
-    		ps = getCon().prepareStatement(sql.toString());
-    		ps.setString(1, codigo);
-    		ps.setInt(2, vgNum);
-    		
-    		ps.executeUpdate();
-            getCon().commit();
-            fechaConexao();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+             estabeleceConexao();
+             PreparedStatement ps = getCon().prepareStatement(comandoSelect);
+             ResultSet rs = ps.executeQuery();
+
+             if (rs.next()) {
+            	 return rs.getInt("vaga");
+             }
+             return -1;
+         } catch (SQLException ex) {
+             ex.printStackTrace();
+             return -1;
+         } finally {
+        	 try {
+				fechaConexao();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+         }
+        
     }
     
-    public static void atualizarReservaVaga(int vgNum, String codigo) {
-    	try {
-    		StringBuilder sql = new StringBuilder();
-    		PreparedStatement ps = null;
-    		estabeleceConexao();
-    		// PRIMEIRO LIMPA TODAS AS RESERVAS DESTE USUARIO;
-    		sql.append(" UPDATE\n")
-    		   .append(" 	vaga SET ")
-    		   .append(" 		vg_reserva_usr = null ")
-    		   .append(" WHERE ")
-    		   .append(" 	vg_reserva_usr = ? ");
-
-    		ps = getCon().prepareStatement(sql.toString());
-    		ps.setString(1, codigo);
-    		
-    		ps.executeUpdate();
-            getCon().commit();
-            
-            if (vgNum != 0) {
-            	reservaVaga(vgNum, codigo);
-            }
-            
-            fechaConexao();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
+    
     
 }

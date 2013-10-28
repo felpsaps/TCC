@@ -82,6 +82,83 @@ public class VagaDAO extends Dao{
 			}
 		}
 	}
+	
+	public void usrEstacionado(String cod, Integer vg) {
+		PreparedStatement ps = null;
+		try {
+
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			sql.append(" DELETE FROM ");
+			sql.append(" 	usuario_estacionado  ");
+			sql.append(" WHERE ");
+			sql.append(" 	usr_codigo = ? ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			ps.setString(1, cod);
+			
+			ps.executeUpdate();
+			
+			sql.setLength(0);
+			sql.append(" INSERT INTO ");
+			sql.append(" 	usuario_estacionado ( ");
+			sql.append(" 		usr_codigo, ");
+			sql.append(" 		vaga ");
+			sql.append(" 	VALUES ( ");
+			sql.append(" 		?, ?) ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			ps.setString(1, cod);
+			ps.setInt(2, vg);
+			
+			ps.executeUpdate();
+			
+			fechaConexao();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void deleteUsrEstacionado(Integer vg) {
+		PreparedStatement ps = null;
+		try {
+
+			StringBuilder sql = new StringBuilder();
+			estabeleceConexao();
+			
+			sql.append(" DELETE FROM ");
+			sql.append(" 	usuario_estacionado  ");
+			sql.append(" WHERE ");
+			sql.append(" 	vaga = ? ");
+			
+			ps = getCon().prepareStatement(sql.toString());
+			ps.setInt(1, vg);
+			
+			ps.executeUpdate();
+			
+			fechaConexao();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	/**
 	 * Grava a porcentagem total usada do estacionamento no momento

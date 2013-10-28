@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  * @author Felipe
  */
 public class Banco {
-    private static Connection con;
+    public static Connection con;
     /**
      * Estabelece uma conexão com o banco de dados
      *

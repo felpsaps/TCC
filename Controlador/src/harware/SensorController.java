@@ -132,9 +132,13 @@ public class SensorController {
                 					}
                 					
                 				}
+                				// GRAVA REGISTRO DE VEICULO ESTACIONADO
+                				new VagaDAO().usrEstacionado(listaUsr.getPrimeiroFunc().getCodigo(), vg.getNro());
             					// APENAS REMOVE O FUNCIONARIO DA LISTA
             					listaUsr.removePrimeiroFunc();
                 			}
+                			// RETIRA ESTA VAGA DA TABELA PARA NAO APARECER MAIS NO PAINEL WEB
+                			vgDAO.deleteUsrEstacionado(vg.getNro());
                 		}
                 		leds++;
                 	}
