@@ -1,0 +1,629 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.2.3
+-- Dumped by pg_dump version 9.2.3
+-- Started on 2013-10-28 23:01:16
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 1995 (class 1262 OID 49298)
+-- Name: estacionamento; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE estacionamento WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Portuguese_Brazil.1252' LC_CTYPE = 'Portuguese_Brazil.1252';
+
+
+ALTER DATABASE estacionamento OWNER TO postgres;
+
+\connect estacionamento
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 181 (class 3079 OID 11727)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 1998 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 174 (class 1259 OID 65689)
+-- Name: estacionamento_nao_autorizado; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE estacionamento_nao_autorizado (
+    ena_id integer NOT NULL,
+    ena_toaster character varying(2) DEFAULT 'N'::character varying,
+    ena_lida character varying(2) DEFAULT 'N'::character varying,
+    ena_excluida character varying(2) DEFAULT 'N'::character varying,
+    ena_vaga integer,
+    ena_usr_reservada character varying,
+    ena_usr_estacionado character varying,
+    ena_data timestamp without time zone
+);
+
+
+ALTER TABLE public.estacionamento_nao_autorizado OWNER TO postgres;
+
+--
+-- TOC entry 177 (class 1259 OID 65698)
+-- Name: estacionamento_nao_autorizado_ena_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE estacionamento_nao_autorizado_ena_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.estacionamento_nao_autorizado_ena_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1999 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: estacionamento_nao_autorizado_ena_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE estacionamento_nao_autorizado_ena_id_seq OWNED BY estacionamento_nao_autorizado.ena_id;
+
+
+--
+-- TOC entry 175 (class 1259 OID 65692)
+-- Name: estatistica; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE estatistica (
+    est_id integer NOT NULL,
+    est_pct numeric(5,2),
+    est_data timestamp without time zone
+);
+
+
+ALTER TABLE public.estatistica OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 65695)
+-- Name: estatistica_diaria; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE estatistica_diaria (
+    estd_id integer NOT NULL,
+    estd_data timestamp without time zone,
+    estd_pct numeric(6,2)
+);
+
+
+ALTER TABLE public.estatistica_diaria OWNER TO postgres;
+
+--
+-- TOC entry 179 (class 1259 OID 65731)
+-- Name: estatistica_diaria_estd_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE estatistica_diaria_estd_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.estatistica_diaria_estd_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2000 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: estatistica_diaria_estd_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE estatistica_diaria_estd_id_seq OWNED BY estatistica_diaria.estd_id;
+
+
+--
+-- TOC entry 178 (class 1259 OID 65723)
+-- Name: estatistica_est_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE estatistica_est_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.estatistica_est_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2001 (class 0 OID 0)
+-- Dependencies: 178
+-- Name: estatistica_est_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE estatistica_est_id_seq OWNED BY estatistica.est_id;
+
+
+--
+-- TOC entry 168 (class 1259 OID 49299)
+-- Name: funcionario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE funcionario (
+    usr_codigo character varying(50) NOT NULL,
+    usr_nome character varying(50),
+    usr_email character varying(50),
+    usr_celular character varying(20),
+    usr_tipo integer,
+    usr_login character varying(100),
+    usr_senha character varying(100)
+);
+
+
+ALTER TABLE public.funcionario OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 57499)
+-- Name: registro; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE registro (
+    reg_id integer NOT NULL,
+    reg_usr_cod character varying,
+    reg_tipo character varying,
+    reg_data timestamp without time zone,
+    reg_permanencia interval
+);
+
+
+ALTER TABLE public.registro OWNER TO postgres;
+
+--
+-- TOC entry 172 (class 1259 OID 57497)
+-- Name: registro_reg_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE registro_reg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.registro_reg_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2002 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: registro_reg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE registro_reg_id_seq OWNED BY registro.reg_id;
+
+
+--
+-- TOC entry 169 (class 1259 OID 49304)
+-- Name: servidorsmtp; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE servidorsmtp (
+    endereco character varying(100),
+    nome character varying(100),
+    senha character varying(100),
+    porta character varying(100),
+    email character(100)
+);
+
+
+ALTER TABLE public.servidorsmtp OWNER TO postgres;
+
+--
+-- TOC entry 180 (class 1259 OID 65739)
+-- Name: usuario_estacionado; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE usuario_estacionado (
+    usr_codigo character varying,
+    vaga integer
+);
+
+
+ALTER TABLE public.usuario_estacionado OWNER TO postgres;
+
+--
+-- TOC entry 171 (class 1259 OID 49328)
+-- Name: vaga; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE vaga (
+    vg_id integer NOT NULL,
+    vg_numero integer,
+    vg_disp integer DEFAULT 1,
+    vg_reserva_usr character varying(100)
+);
+
+
+ALTER TABLE public.vaga OWNER TO postgres;
+
+--
+-- TOC entry 170 (class 1259 OID 49326)
+-- Name: vaga_vg_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE vaga_vg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.vaga_vg_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2003 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: vaga_vg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE vaga_vg_id_seq OWNED BY vaga.vg_id;
+
+
+--
+-- TOC entry 1959 (class 2604 OID 65700)
+-- Name: ena_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY estacionamento_nao_autorizado ALTER COLUMN ena_id SET DEFAULT nextval('estacionamento_nao_autorizado_ena_id_seq'::regclass);
+
+
+--
+-- TOC entry 1963 (class 2604 OID 65725)
+-- Name: est_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY estatistica ALTER COLUMN est_id SET DEFAULT nextval('estatistica_est_id_seq'::regclass);
+
+
+--
+-- TOC entry 1964 (class 2604 OID 65733)
+-- Name: estd_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY estatistica_diaria ALTER COLUMN estd_id SET DEFAULT nextval('estatistica_diaria_estd_id_seq'::regclass);
+
+
+--
+-- TOC entry 1958 (class 2604 OID 57502)
+-- Name: reg_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY registro ALTER COLUMN reg_id SET DEFAULT nextval('registro_reg_id_seq'::regclass);
+
+
+--
+-- TOC entry 1956 (class 2604 OID 49331)
+-- Name: vg_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY vaga ALTER COLUMN vg_id SET DEFAULT nextval('vaga_vg_id_seq'::regclass);
+
+
+--
+-- TOC entry 1984 (class 0 OID 65689)
+-- Dependencies: 174
+-- Data for Name: estacionamento_nao_autorizado; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO estacionamento_nao_autorizado (ena_id, ena_toaster, ena_lida, ena_excluida, ena_vaga, ena_usr_reservada, ena_usr_estacionado, ena_data) VALUES (1, 'S', 'N', 'N', 1, '2', '1', '2013-09-03 22:05:11.143');
+INSERT INTO estacionamento_nao_autorizado (ena_id, ena_toaster, ena_lida, ena_excluida, ena_vaga, ena_usr_reservada, ena_usr_estacionado, ena_data) VALUES (2, 'S', 'N', 'N', 1, '2', '1', '2013-09-05 00:00:00');
+
+
+--
+-- TOC entry 2004 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: estacionamento_nao_autorizado_ena_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('estacionamento_nao_autorizado_ena_id_seq', 2, true);
+
+
+--
+-- TOC entry 1985 (class 0 OID 65692)
+-- Dependencies: 175
+-- Data for Name: estatistica; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO estatistica (est_id, est_pct, est_data) VALUES (1, 0.00, '2013-09-25 21:24:30.418');
+INSERT INTO estatistica (est_id, est_pct, est_data) VALUES (2, 10.00, '2013-09-25 21:53:01.32');
+INSERT INTO estatistica (est_id, est_pct, est_data) VALUES (3, 10.00, '2013-09-25 21:53:17.545');
+INSERT INTO estatistica (est_id, est_pct, est_data) VALUES (4, 10.00, '2013-09-25 21:53:27.383');
+INSERT INTO estatistica (est_id, est_pct, est_data) VALUES (5, 20.00, '2013-09-25 21:53:39.901');
+INSERT INTO estatistica (est_id, est_pct, est_data) VALUES (6, 0.00, '2013-10-03 22:57:42.666');
+
+
+--
+-- TOC entry 1986 (class 0 OID 65695)
+-- Dependencies: 176
+-- Data for Name: estatistica_diaria; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (12, '2013-09-08 00:00:00', 24.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (7, '2013-09-03 00:00:00', 14.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (5, '2013-09-01 00:00:00', 12.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (6, '2013-09-02 00:00:00', 5.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (8, '2013-09-04 00:00:00', 2.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (9, '2013-09-05 00:00:00', 22.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (10, '2013-09-06 00:00:00', 3.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (11, '2013-09-07 00:00:00', 12.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (14, '2013-09-10 00:00:00', 29.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (13, '2013-09-09 00:00:00', 20.00);
+INSERT INTO estatistica_diaria (estd_id, estd_data, estd_pct) VALUES (18, '2013-10-03 22:57:41.277', 0.00);
+
+
+--
+-- TOC entry 2005 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: estatistica_diaria_estd_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('estatistica_diaria_estd_id_seq', 18, true);
+
+
+--
+-- TOC entry 2006 (class 0 OID 0)
+-- Dependencies: 178
+-- Name: estatistica_est_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('estatistica_est_id_seq', 6, true);
+
+
+--
+-- TOC entry 1978 (class 0 OID 49299)
+-- Dependencies: 168
+-- Data for Name: funcionario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO funcionario (usr_codigo, usr_nome, usr_email, usr_celular, usr_tipo, usr_login, usr_senha) VALUES ('2', 'gusta', 'gusta', '2222222222', 1, 'w9Ga5lVy+w0=', 'jf2rexkz8J0=');
+INSERT INTO funcionario (usr_codigo, usr_nome, usr_email, usr_celular, usr_tipo, usr_login, usr_senha) VALUES ('3', 'ana', 'ana', '2222222222', 2, NULL, NULL);
+INSERT INTO funcionario (usr_codigo, usr_nome, usr_email, usr_celular, usr_tipo, usr_login, usr_senha) VALUES ('1', 'Felipe', 'felipinlineaps@gmail.com', '1998419344', 0, '4/oehRa9jbCdorlW0SaTIQ==', 'uiOgb+YIEZE=');
+INSERT INTO funcionario (usr_codigo, usr_nome, usr_email, usr_celular, usr_tipo, usr_login, usr_senha) VALUES ('5', 'Admin', 'admin@gmail.com', '2222222222', 1, 'dUiVxlvzTg4=', 'kuoKBbvCD1k=');
+
+
+--
+-- TOC entry 1983 (class 0 OID 57499)
+-- Dependencies: 173
+-- Data for Name: registro; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (1, '2', 'Entrada', '2013-08-01 08:00:00', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (2, '2', 'Saída', '2013-08-01 08:37:00', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (3, '1', 'Entrada', '2013-08-01 08:02:00', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (18, '1', 'Saída', '2013-09-02 02:07:16.693', '31 days 18:05:16.693');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (19, '1', 'Entrada', '2013-09-16 23:00:33.618', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (20, '1', 'Saída', '2013-09-16 23:01:01.092', '00:00:28.092');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (21, '1', 'Entrada', '2013-09-16 23:02:12.528', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (22, '1', 'Saída', '2013-09-16 23:02:21.984', '00:00:09.984');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (23, '1', 'Entrada', '2013-09-16 23:03:21.426', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (24, '1', 'Saída', '2013-09-16 23:03:33.201', '00:00:12.201');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (25, '1', 'Entrada', '2013-09-16 23:05:42.545', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (26, '1', 'Saída', '2013-09-16 23:05:55.715', '00:00:13.715');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (27, '1', 'Entrada', '2013-09-16 23:06:58.718', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (28, '1', 'Saída', '2013-09-16 23:07:08.579', '00:00:10.579');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (29, '1', 'Entrada', '2013-09-16 23:08:14.26', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (30, '1', 'Saída', '2013-09-16 23:08:26.558', '00:00:12.558');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (31, '1', 'Entrada', '2013-09-16 23:09:13.622', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (32, '1', 'Saída', '2013-09-16 23:09:24.236', '00:00:11.236');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (33, '1', 'Entrada', '2013-09-16 23:09:55.241', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (34, '1', 'Saída', '2013-09-16 23:10:01.457', '00:00:06.457');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (35, '1', 'Entrada', '2013-09-16 23:11:43.503', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (36, '1', 'Saída', '2013-09-16 23:12:09.558', '00:00:26.558');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (37, '1', 'Entrada', '2013-09-16 23:12:29.222', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (38, '1', 'Saída', '2013-09-16 23:12:41.246', '00:00:12.246');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (39, '1', 'Entrada', '2013-09-16 23:14:41.032', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (40, '1', 'Saída', '2013-09-16 23:17:00.245', '00:02:19.245');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (41, '1', 'Entrada', '2013-09-16 23:17:48.014', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (42, '1', 'Saída', '2013-09-16 23:19:28.859', '00:01:40.859');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (43, '1', 'Entrada', '2013-09-16 23:29:36.644', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (44, '1', 'Saída', '2013-09-16 23:29:46.955', '00:00:10.955');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (45, '1', 'Entrada', '2013-09-16 23:29:57.538', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (46, '1', 'Saída', '2013-09-16 23:30:05.316', '00:00:08.316');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (47, '1', 'Entrada', '2013-09-16 23:32:53.383', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (48, '1', 'Saída', '2013-09-16 23:33:22.105', '00:00:29.105');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (49, '1', 'Entrada', '2013-09-16 23:36:19.952', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (50, '1', 'Saída', '2013-09-16 23:36:37.326', '00:00:18.326');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (51, '1', 'Entrada', '2013-09-16 23:37:15.899', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (52, '1', 'Saída', '2013-09-16 23:37:23.392', '00:00:08.392');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (53, '1', 'Entrada', '2013-09-16 23:38:58.208', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (54, '1', 'Saída', '2013-09-16 23:39:04.92', '00:00:06.92');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (55, '1', 'Entrada', '2013-09-16 23:39:20.531', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (56, '1', 'Saída', '2013-09-16 23:39:29.885', '00:00:09.885');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (57, '2', 'Entrada', '2013-09-16 23:39:50.71', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (58, '1', 'Entrada', '2013-09-16 23:39:58.615', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (59, '1', 'Saída', '2013-09-16 23:41:07.598', '00:01:09.598');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (60, '2', 'Saída', '2013-09-16 23:41:13.322', '00:01:23.322');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (61, '1', 'Entrada', '2013-09-16 23:44:24.437', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (62, '2', 'Entrada', '2013-09-16 23:44:30.478', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (63, '3', 'Entrada', '2013-09-16 23:44:38.583', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (64, '3', 'Saída', '2013-09-16 23:44:45.706', '00:00:07.706');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (65, '2', 'Saída', '2013-09-16 23:44:51.285', '00:00:21.285');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (66, '3', 'Entrada', '2013-09-16 23:45:02.026', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (67, '1', 'Saída', '2013-09-16 23:45:07.506', '00:00:43.506');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (68, '3', 'Saída', '2013-09-16 23:45:13.011', '00:00:11.011');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (69, '2', 'Entrada', '2013-09-16 23:50:13.545', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (70, '2', 'Saída', '2013-09-16 23:50:21.457', '00:00:08.457');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (71, '3', 'Entrada', '2013-09-16 23:50:28.942', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (72, '3', 'Saída', '2013-09-16 23:50:34.482', '00:00:06.482');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (73, '2', 'Entrada', '2013-09-24 23:23:04.498', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (74, '2', 'Saída', '2013-09-24 23:23:51.512', '00:00:47.512');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (75, '1', 'Entrada', '2013-09-25 21:24:05.036', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (76, '2', 'Entrada', '2013-09-25 21:24:11.889', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (77, '3', 'Entrada', '2013-09-25 21:24:24.121', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (78, '1', 'Saída', '2013-09-25 21:24:30.429', '00:00:25.429');
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (79, '1', 'Entrada', '2013-09-30 23:20:52.081', NULL);
+INSERT INTO registro (reg_id, reg_usr_cod, reg_tipo, reg_data, reg_permanencia) VALUES (80, '1', 'Saída', '2013-10-03 22:57:42.682', '2 days 23:36:50.682');
+
+
+--
+-- TOC entry 2007 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: registro_reg_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('registro_reg_id_seq', 80, true);
+
+
+--
+-- TOC entry 1979 (class 0 OID 49304)
+-- Dependencies: 169
+-- Data for Name: servidorsmtp; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO servidorsmtp (endereco, nome, senha, porta, email) VALUES ('smtp.gmail.com', 'gmail', 'JBfelknjLPAJdqW86yEekQ==', '587', 'felipeaps89@gmail.com                                                                               ');
+
+
+--
+-- TOC entry 1990 (class 0 OID 65739)
+-- Dependencies: 180
+-- Data for Name: usuario_estacionado; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO usuario_estacionado (usr_codigo, vaga) VALUES ('0', 5);
+
+
+--
+-- TOC entry 1981 (class 0 OID 49328)
+-- Dependencies: 171
+-- Data for Name: vaga; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (6, 6, 1, NULL);
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (8, 8, 1, NULL);
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (1, 1, 1, '2');
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (2, 2, 1, NULL);
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (3, 3, 1, NULL);
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (4, 4, 1, NULL);
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (5, 5, 0, NULL);
+INSERT INTO vaga (vg_id, vg_numero, vg_disp, vg_reserva_usr) VALUES (7, 7, 1, NULL);
+
+
+--
+-- TOC entry 2008 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: vaga_vg_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('vaga_vg_id_seq', 8, true);
+
+
+--
+-- TOC entry 1976 (class 2606 OID 65738)
+-- Name: estd_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY estatistica_diaria
+    ADD CONSTRAINT estd_pk PRIMARY KEY (estd_id);
+
+
+--
+-- TOC entry 1966 (class 2606 OID 49303)
+-- Name: func_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY funcionario
+    ADD CONSTRAINT func_pk PRIMARY KEY (usr_codigo);
+
+
+--
+-- TOC entry 1972 (class 2606 OID 65722)
+-- Name: pk_ena; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY estacionamento_nao_autorizado
+    ADD CONSTRAINT pk_ena PRIMARY KEY (ena_id);
+
+
+--
+-- TOC entry 1974 (class 2606 OID 65730)
+-- Name: pk_est; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY estatistica
+    ADD CONSTRAINT pk_est PRIMARY KEY (est_id);
+
+
+--
+-- TOC entry 1970 (class 2606 OID 65720)
+-- Name: pk_registro; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY registro
+    ADD CONSTRAINT pk_registro PRIMARY KEY (reg_id);
+
+
+--
+-- TOC entry 1968 (class 2606 OID 49333)
+-- Name: vaga_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY vaga
+    ADD CONSTRAINT vaga_pk PRIMARY KEY (vg_id);
+
+
+--
+-- TOC entry 1977 (class 2606 OID 57492)
+-- Name: usr_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY vaga
+    ADD CONSTRAINT usr_fk FOREIGN KEY (vg_reserva_usr) REFERENCES funcionario(usr_codigo);
+
+
+--
+-- TOC entry 1997 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2013-10-28 23:01:17
+
+--
+-- PostgreSQL database dump complete
+--
+
